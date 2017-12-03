@@ -3,11 +3,20 @@
   "version": "0.0.1",
   "description": "visual expression of form",
   "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Adam Florin",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamflorin/vys-ex"
+  },
+  "scripts": {
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0",
+    "build": "webpack --progress --colors"
+  },
+  "dependencies": {
+    "file-loader": "^1.1.5",
+    "webpack": "^3.9.1",
+    "webpack-dev-server": "^2.9.5"
+  },
+  "devDependencies": {}
 }
