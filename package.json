@@ -18,5 +18,9 @@
     "webpack": "^3.9.1",
     "webpack-dev-server": "^2.9.5"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1"
+  }
 }

@@ -1,14 +1,25 @@
+var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
   entry: {
-    html: './index.html',
+    javascript: './index.js'
+  },
+  output: {
+    filename: 'main.js',
+    path: path.resolve(__dirname, 'build')
   },
   module: {
     loaders: [
       {
-        test: /\.html$/,
-        loader: "file-loader?name=[name].[ext]"
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['babel-preset-env']
+          }
+        }
       }
     ]
   }
