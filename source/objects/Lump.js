@@ -6,8 +6,8 @@ const mesh = icosphere(3)
 const normals = angleNormals(mesh.cells, mesh.positions)
 
 export default regl({
-  frag: require('../../shaders/thing.frag.glsl'),
-  vert: require('../../shaders/thing.vert.glsl'),
+  frag: require('../../shaders/lump.frag.glsl'),
+  vert: require('../../shaders/lump.vert.glsl'),
 
   attributes: {
     position: mesh.positions,
