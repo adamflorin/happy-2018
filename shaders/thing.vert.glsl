@@ -1,15 +1,24 @@
-attribute vec2 position;
+// precision mediump float;
 
-uniform float angle, scale, width, height;
+#pragma glslify: rotateY = require(glsl-y-rotate/rotateY)
+#pragma glslify: snoise = require('glsl-noise/simplex/3d')
+
+attribute vec3 position, normal;
+
+uniform float time, angle, scale, width, height;
 
 varying vec3 vpos;
+varying vec3 vnormal;
 
 void main() {
+  vnormal = normal;
+
   float aspect = width / height;
-  vpos = vec3(
-    scale * (cos(angle) * position.x - sin(angle) * position.y),
-    aspect * scale * (sin(angle) * position.x + cos(angle) * position.y),
-    0.0
-  );
-  gl_Position = vec4(vpos, 1.0);
+  vec3 newPosition = position * scale;
+  newPosition += vnormal * snoise(position) * 0.05;
+  newPosition.y *= aspect;
+  vpos = newPosition;
+  newPosition = rotateY(angle) * newPosition;
+
+  gl_Position = vec4(newPosition, 1.0);
 }
