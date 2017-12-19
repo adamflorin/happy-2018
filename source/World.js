@@ -1,6 +1,5 @@
 import {regl, camera} from './global'
 import drawLump from './objects/Lump'
-import drawSdf from './objects/Sdf'
 
 regl.frame(() => {
   regl.clear({
@@ -8,11 +7,19 @@ regl.frame(() => {
     depth: true
   })
   camera(() => {
-    drawSdf()
-
-    // drawLump({
-    //   scale: 0.3,
-    //   speed: 0.005
-    // })
+    drawLump([
+      {
+        scale: 0.3,
+        speed: 0.005
+      },
+      {
+        scale: 0.3,
+        speed: -0.002
+      },
+      {
+        scale: 0.3,
+        speed: 0.009
+      }
+    ])
   })
 })
