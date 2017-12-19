@@ -34,17 +34,17 @@ const drawProcessed = regl({
 regl.frame(({viewportWidth, viewportHeight}) => {
   fbo.resize(viewportWidth, viewportHeight)
 
-  regl.clear({
-    color: [0.15, 0.15, 0.15, 1.0],
-    depth: 1
-  })
-  drawLump({
-    scale: 0.3,
-    speed: 0.005
-  })
-  drawGrid()
 
-  // captureRaw({}, () => {
-  // })
-  // drawProcessed()
+  captureRaw({}, () => {
+    regl.clear({
+      color: [0.15, 0.15, 0.15, 1.0],
+      depth: 1
+    })
+    drawLump({
+      scale: 0.3,
+      speed: 0.005
+    })
+    drawGrid()
+  })
+  drawProcessed()
 })

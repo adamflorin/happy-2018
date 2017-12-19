@@ -5,11 +5,9 @@ export default regl({
   vert: require('../../shaders/grid.vert.glsl'),
 
   attributes: {
-    position: [
-      [-1, -1], [-1, 1], [1, 1],
-      [1, 1], [1, -1], [-1, -1]
-    ]
+    position: [ -4, -4, 4, -4, 0, 4 ] // lol render in oversized triangle
   },
+  count: 3,
 
   blend: {
     enable: true,
@@ -17,7 +15,5 @@ export default regl({
       src: 1,
       dst: 'one minus src alpha'
     }
-  },
-
-  count: 6
+  }
 })
