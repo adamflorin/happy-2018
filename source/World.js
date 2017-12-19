@@ -1,5 +1,6 @@
 import {regl} from './global'
 import drawLump from './objects/Lump'
+import drawGrid from './objects/Grid'
 
 const fbo = regl.framebuffer({
   color: regl.texture({
@@ -24,8 +25,7 @@ const drawProcessed = regl({
     position: [ -4, -4, 4, -4, 0, 4 ] // lol render in oversized triangle
   },
   uniforms: {
-    tex: () => fbo,
-    time: regl.context('time')
+    tex: () => fbo
   },
   depth: {enable: false},
   count: 3
@@ -34,26 +34,17 @@ const drawProcessed = regl({
 regl.frame(({viewportWidth, viewportHeight}) => {
   fbo.resize(viewportWidth, viewportHeight)
 
-  captureRaw({}, () => {
-    regl.clear({
-      color: [0.15, 0.15, 0.15, 1.0],
-      depth: 1
-    })
-
-    drawLump([
-      {
-        scale: 0.3,
-        speed: 0.005
-      },
-      {
-        scale: 0.3,
-        speed: -0.002
-      },
-      {
-        scale: 0.3,
-        speed: 0.009
-      }
-    ])
+  regl.clear({
+    color: [0.15, 0.15, 0.15, 1.0],
+    depth: 1
   })
-  drawProcessed()
+  drawLump({
+    scale: 0.3,
+    speed: 0.005
+  })
+  drawGrid()
+
+  // captureRaw({}, () => {
+  // })
+  // drawProcessed()
 })

@@ -1,4 +1,4 @@
-import {regl, camera} from '../global'
+import {regl} from '../global'
 
 export default regl({
   frag: require('../../shaders/sdf.frag.glsl'),

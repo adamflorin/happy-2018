@@ -1,8 +1,8 @@
 import icosphere from 'icosphere'
 import angleNormals from 'angle-normals'
-import {regl, camera} from '../global'
+import {regl} from '../global'
 
-const mesh = icosphere(3)
+const mesh = icosphere(5)
 const normals = angleNormals(mesh.cells, mesh.positions)
 
 export default regl({
