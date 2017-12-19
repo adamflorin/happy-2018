@@ -2,7 +2,7 @@ import icosphere from 'icosphere'
 import angleNormals from 'angle-normals'
 import {regl} from '../global'
 
-const mesh = icosphere(5)
+const mesh = icosphere(3)
 const normals = angleNormals(mesh.cells, mesh.positions)
 
 export default regl({
