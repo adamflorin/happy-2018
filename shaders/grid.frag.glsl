@@ -2,8 +2,12 @@ precision mediump float;
 
 varying vec2 uv;
 
-void main () {
-  float value = mod(uv.x,  0.01) < 0.001 ? 1.0 : 0.0;
+const float NUM_COLUMNS = 10.0;
+const float MOD_BY = 1.0 / NUM_COLUMNS;
 
-  gl_FragColor = vec4(value, value, value, 1.0);
+void main () {
+  // float value = mod(uv.x,  MOD_BY) < (MOD_BY * 0.5) ? 1.0 : 0.0;
+  float value = mod(uv.x,  MOD_BY) * (NUM_COLUMNS / 2.0);
+  value = 1.0 - pow(1.0 - value, 3.0);
+  gl_FragColor = vec4(value, 0.0, 0.0, value);
 }

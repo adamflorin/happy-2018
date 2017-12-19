@@ -11,5 +11,13 @@ export default regl({
     ]
   },
 
+  blend: {
+    enable: true,
+    func: {
+      src: 1,
+      dst: 'one minus src alpha'
+    }
+  },
+
   count: 6
 })
