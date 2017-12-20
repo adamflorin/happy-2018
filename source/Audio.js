@@ -5,8 +5,6 @@ const QUARTER_NOTE_MS = 60000.0 / bpm * 0.25
 
 var synth = new Tone.MembraneSynth().toMaster();
 
-var lastTime
-
 Tone.context.updateInterval = 0.005 // s
 
 Tone.Transport.bpm.value = bpm;
@@ -18,4 +16,4 @@ Tone.Transport.scheduleRepeat(
   "4n"
 )
 
-Tone.Transport.start()
+// Tone.Transport.start()
