@@ -1,16 +1,14 @@
 precision mediump float;
 
-#pragma glslify: blendAdd = require(glsl-blend/add)
-
 // #pragma glslify: blendAdd = require(glsl-blend/add)
 // #pragma glslify: blendAverage = require(glsl-blend/average)
 // #pragma glslify: blendColorBurn = require(glsl-blend/color-burn)
 // #pragma glslify: blendColorDodge = require(glsl-blend/color-dodge)
-// #pragma glslify: blendDarken = require(glsl-blend/darken)
+#pragma glslify: blendDarken = require(glsl-blend/darken)
 // #pragma glslify: blendDifference = require(glsl-blend/difference)
 // #pragma glslify: blendExclusion = require(glsl-blend/exclusion)
 // #pragma glslify: blendGlow = require(glsl-blend/glow)
-// #pragma glslify: blendHardLight = require(glsl-blend/hard-light)
+#pragma glslify: blendHardLight = require(glsl-blend/hard-light)
 // #pragma glslify: blendHardMix = require(glsl-blend/hard-mix)
 // #pragma glslify: blendLighten = require(glsl-blend/lighten)
 // #pragma glslify: blendLinearBurn = require(glsl-blend/linear-burn)
@@ -31,6 +29,7 @@ precision mediump float;
 varying vec2 uv;
 
 uniform sampler2D tex;
+uniform sampler2D te2;
 
 void main() {
   vec2 uvl = uv;
@@ -39,10 +38,18 @@ void main() {
   uvr.x -= 0.5;
   vec3 rgbl = texture2D(tex, uvl).rgb;
   vec3 rgbr = texture2D(tex, uvr).rgb;
-  rgbr.b = rgbr.r;
-  rgbr.r = 0.0;
+  vec3 fg2 = blendDarken(rgbl, rgbr);
 
-  vec3 color = blendAdd(rgbl, rgbr);
+  vec3 bg = vec3(1.0, 0.231, 0.863);
+  vec3 fg = texture2D(tex, uv).rgb;
+
+  vec3 color = blendHardLight(bg, fg);
+  color = blendHardLight(color * 0.9, fg2 * 0.9);
+
+  // now apply curves
+  color.r = 4.0 * pow(color.r - 0.5, 2.0);
+  color.g = 4.0 * pow(color.g - 0.5, 2.0);
+  color.b = 4.0 * pow(color.b - 0.5, 2.0);
 
   gl_FragColor = vec4(color, 1.0);
 }
