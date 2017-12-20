@@ -9,6 +9,10 @@ export default regl({
   },
   count: 3,
 
+  uniforms: {
+    time: regl.context('time')
+  },
+
   blend: {
     enable: true,
     func: {

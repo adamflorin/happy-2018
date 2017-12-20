@@ -34,15 +34,10 @@ const drawProcessed = regl({
 regl.frame(({viewportWidth, viewportHeight}) => {
   fbo.resize(viewportWidth, viewportHeight)
 
-
   captureRaw({}, () => {
     regl.clear({
       color: [0.15, 0.15, 0.15, 1.0],
       depth: 1
-    })
-    drawLump({
-      scale: 0.3,
-      speed: 0.005
     })
     drawGrid()
   })
