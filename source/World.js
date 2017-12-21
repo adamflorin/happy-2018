@@ -1,6 +1,16 @@
 import {regl} from './global'
+import dat from 'dat-gui'
 import drawLump from './objects/Lump'
 import drawGrid from './objects/Grid'
+
+class Settings {
+  constructor() {
+    this.umm = 0.9
+  }
+}
+const settings = new Settings()
+const gui = new dat.GUI()
+gui.add(settings, 'umm', 0.0, 1.0)
 
 const fbo = regl.framebuffer({
   color: regl.texture({
@@ -25,7 +35,9 @@ const drawProcessed = regl({
     position: [ -4, -4, 4, -4, 0, 4 ] // lol render in oversized triangle
   },
   uniforms: {
-    tex: () => fbo
+    tex: () => fbo,
+    umm: regl.prop('umm'),
+    time: regl.context('time')
   },
   depth: {enable: false},
   count: 3
@@ -41,5 +53,5 @@ regl.frame(({viewportWidth, viewportHeight}) => {
     })
     drawGrid()
   })
-  drawProcessed()
+  drawProcessed({umm: settings.umm})
 })

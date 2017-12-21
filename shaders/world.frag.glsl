@@ -29,9 +29,12 @@ precision mediump float;
 varying vec2 uv;
 
 uniform sampler2D tex;
-uniform sampler2D te2;
+uniform float umm;
+uniform float time;
 
 void main() {
+  float modtime = sin(time) * 0.25 + 0.75;
+
   vec2 uvl = uv;
   uvl.x += 0.5;
   vec2 uvr = uv;
@@ -44,7 +47,7 @@ void main() {
   vec3 fg = texture2D(tex, uv).rgb;
 
   vec3 color = blendHardLight(bg, fg);
-  color = blendHardLight(color * 0.9, fg2 * 0.9);
+  color = blendHardLight(color * modtime, fg2 * modtime);
 
   // now apply curves
   color.r = 4.0 * pow(color.r - 0.5, 2.0);
