@@ -3,6 +3,9 @@ import dat from 'dat-gui'
 import drawLump from './objects/Lump'
 import drawGrid from './objects/Grid'
 
+let umm = 0.0
+let decayId
+
 class Settings {
   constructor() {
     this.umm = 0.9
@@ -11,6 +14,21 @@ class Settings {
 const settings = new Settings()
 const gui = new dat.GUI()
 gui.add(settings, 'umm', 0.0, 1.0)
+
+function trigger() {
+  umm = 1.0
+  clearInterval(decayId)
+  decayId = setInterval(
+    () => {
+      umm -= 0.05
+      if (umm < 0.0) {
+        umm = 0.0
+        clearInterval(decayId)
+      }
+    },
+    1000.0 / 60.0
+  )
+}
 
 const fbo = regl.framebuffer({
   color: regl.texture({
@@ -53,5 +71,9 @@ regl.frame(({viewportWidth, viewportHeight}) => {
     })
     drawGrid()
   })
-  drawProcessed({umm: settings.umm})
+  drawProcessed({umm})
 })
+
+module.exports = {
+  trigger
+}

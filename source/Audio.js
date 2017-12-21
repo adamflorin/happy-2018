@@ -1,19 +1,21 @@
 import Tone from 'tone'
 
-const bpm = 120.0
-const QUARTER_NOTE_MS = 60000.0 / bpm * 0.25
+const synth = new Tone.MembraneSynth({
+  pitchDecay: 0.05,
+  octaves: 2,
+  envelope: {
+    attack: 0.001,
+    decay: 0.9,
+    sustain: 0.2,
+    release: 1.5,
+    // attackCurve: exponential
+  }
+}).toMaster()
 
-var synth = new Tone.MembraneSynth().toMaster();
+function playSound() {
+  synth.triggerAttackRelease("C2", "8n")
+}
 
-Tone.context.updateInterval = 0.005 // s
-
-Tone.Transport.bpm.value = bpm;
-
-Tone.Transport.scheduleRepeat(
-  () => {
-    synth.triggerAttackRelease("C2", "8n")
-  },
-  "4n"
-)
-
-// Tone.Transport.start()
+module.exports = {
+  playSound
+}

@@ -33,7 +33,7 @@ uniform float umm;
 uniform float time;
 
 void main() {
-  float modtime = sin(time) * 0.25 + 0.75;
+  float modtime = 0.6 - pow(umm, 2.0) * 0.2; //sin(time) * 0.25 + 0.75;
 
   vec2 uvl = uv;
   uvl.x += 0.5;
@@ -50,7 +50,7 @@ void main() {
   color = blendHardLight(color * modtime, fg2 * modtime);
 
   // now apply curves
-  color.r = 4.0 * pow(color.r - 0.5, 2.0);
+  // color.r = 4.0 * pow(color.r - 0.5, 2.0);
   color.g = 4.0 * pow(color.g - 0.5, 2.0);
   color.b = 4.0 * pow(color.b - 0.5, 2.0);
 

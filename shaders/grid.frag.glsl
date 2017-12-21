@@ -8,8 +8,8 @@ const float NUM_COLUMNS = 20.0;
 const float MOD_BY = 1.0 / NUM_COLUMNS;
 
 void main () {
-  float modtime = sin(time);
-  float modtime2 = cos(time + 0.7);
+  float modtime = 0.5; //sin(time);
+  float modtime2 = 0.5; //cos(time + 0.7);
 
   float value = length(vec2(uv.x - 0.5, uv.y - 0.5)) * 1.5;
   // value = pow(value, 2.0);
