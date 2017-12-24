@@ -2,6 +2,10 @@ import {regl} from './global'
 import dat from 'dat-gui'
 import drawLump from './objects/Lump'
 import drawGrid from './objects/Grid'
+import drawMote from './objects/Mote'
+
+const displayControls = true
+const doPostProcess = false
 
 let umm = 0.0
 let decayId
@@ -9,11 +13,22 @@ let decayId
 class Settings {
   constructor() {
     this.umm = 0.9
+    this.backgroundColor = [75, 12, 150]
+    this.shadowColor = [25, 0, 25]
+    this.lightAColor = [190, 190, 0]
+    this.lightBColor = [0, 255, 100]
   }
 }
 const settings = new Settings()
-const gui = new dat.GUI()
-gui.add(settings, 'umm', 0.0, 1.0)
+
+if (displayControls) {
+  const gui = new dat.GUI()
+  gui.add(settings, 'umm', 0.0, 1.0)
+  gui.addColor(settings, 'backgroundColor')
+  gui.addColor(settings, 'shadowColor')
+  gui.addColor(settings, 'lightAColor')
+  gui.addColor(settings, 'lightBColor')
+}
 
 function trigger() {
   umm = 1.0
@@ -61,17 +76,41 @@ const drawProcessed = regl({
   count: 3
 })
 
+function drawScene() {
+  const backgroundColor = [
+    settings.backgroundColor[0] / 255.0,
+    settings.backgroundColor[1] / 255.0,
+    settings.backgroundColor[2] / 255.0,
+    1.0
+  ]
+  regl.clear({
+    color: backgroundColor,
+    depth: 1
+  })
+  drawMote({
+    shadowColor: floatColor(settings.shadowColor),
+    lightAColor: floatColor(settings.lightAColor),
+    lightBColor: floatColor(settings.lightBColor)
+  })
+}
+
+function floatColor(intColor) {
+  if (typeof intColor === 'string') {
+    const matches = intColor.match(/#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/)
+    intColor = matches.slice(1, 4).map(string => parseInt(string, 16))
+  }
+  return intColor.map(value => value / 255.0)
+}
+
 regl.frame(({viewportWidth, viewportHeight}) => {
   fbo.resize(viewportWidth, viewportHeight)
 
-  captureRaw({}, () => {
-    regl.clear({
-      color: [0.15, 0.15, 0.15, 1.0],
-      depth: 1
-    })
-    drawGrid()
-  })
-  drawProcessed({umm})
+  if (!doPostProcess) {
+    drawScene()
+  } else {
+    captureRaw({}, () => drawScene())
+    drawProcessed({umm})
+  }
 })
 
 module.exports = {

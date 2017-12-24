@@ -7,4 +7,4 @@ sequencer.setCallback(() => {
   trigger()
 })
 
-sequencer.start()
+// sequencer.start()
