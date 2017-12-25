@@ -1,6 +1,6 @@
-import sequencer from './source/Sequencer.js'
-import {trigger} from './source/World.js'
-import {playSound} from './source/Audio.js'
+import sequencer from './source/Sequencer'
+import {trigger, tap} from './source/World'
+import {playSound} from './source/Audio'
 
 sequencer.setCallback(() => {
   playSound()
@@ -8,3 +8,13 @@ sequencer.setCallback(() => {
 })
 
 // sequencer.start()
+
+window.addEventListener(
+  'mousedown',
+  event => {
+    const x = (event.x / window.innerWidth - 0.5) * 2.0
+    const y = (event.y / window.innerHeight - 0.5) * 2.0
+    const angle = Math.atan2(-y, x)
+    tap(angle)
+  }
+)

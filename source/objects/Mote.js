@@ -19,6 +19,7 @@ export default regl({
     height: regl.context('viewportHeight'),
     shadowColor: regl.prop('shadowColor'),
     lightAColor: regl.prop('lightAColor'),
-    lightBColor: regl.prop('lightBColor')
+    lightBColor: regl.prop('lightBColor'),
+    objectPosition: regl.prop('objectPosition')
   }
 })

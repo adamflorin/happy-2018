@@ -1,5 +1,6 @@
 import {regl} from './global'
 import dat from 'dat-gui'
+import physics from './Physics'
 import drawLump from './objects/Lump'
 import drawGrid from './objects/Grid'
 import drawMote from './objects/Mote'
@@ -28,6 +29,10 @@ if (displayControls) {
   gui.addColor(settings, 'shadowColor')
   gui.addColor(settings, 'lightAColor')
   gui.addColor(settings, 'lightBColor')
+}
+
+function tap(angle) {
+  physics.blow(angle + Math.PI)
 }
 
 function trigger() {
@@ -90,7 +95,8 @@ function drawScene() {
   drawMote({
     shadowColor: floatColor(settings.shadowColor),
     lightAColor: floatColor(settings.lightAColor),
-    lightBColor: floatColor(settings.lightBColor)
+    lightBColor: floatColor(settings.lightBColor),
+    objectPosition: physics.getObjectPosition()
   })
 }
 
@@ -105,6 +111,8 @@ function floatColor(intColor) {
 regl.frame(({viewportWidth, viewportHeight}) => {
   fbo.resize(viewportWidth, viewportHeight)
 
+  physics.step()
+
   if (!doPostProcess) {
     drawScene()
   } else {
@@ -114,5 +122,6 @@ regl.frame(({viewportWidth, viewportHeight}) => {
 })
 
 module.exports = {
-  trigger
+  trigger,
+  tap
 }
