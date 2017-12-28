@@ -12,10 +12,10 @@ class Settings {
     this.windForceDecay = 0.98
 
     // Color
-    this.backgroundColor = [75, 12, 150]
-    this.shadowColor = [25, 0, 25]
-    this.lightAColor = [190, 190, 0]
-    this.lightBColor = [0, 255, 100]
+    this.backgroundColor = '#f58888'
+    this.shadowColor = '#f07070'
+    this.lightAColor = '#75000a'
+    this.lightBColor = '#75000a'
   }
 }
 

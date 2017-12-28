@@ -5,7 +5,7 @@ import drawLump from './objects/Lump'
 import drawGrid from './objects/Grid'
 import drawMote from './objects/Mote'
 
-const doPostProcess = false
+const doPostProcess = true
 
 let decay = 0.0
 let decayIntervalId
@@ -53,22 +53,17 @@ const drawProcessed = regl({
   },
   uniforms: {
     tex: () => fbo,
-    decay: regl.prop('decay'),
-    time: regl.context('time')
+    time: regl.context('time'),
+    width: regl.context('viewportWidth'),
+    height: regl.context('viewportHeight')
   },
   depth: {enable: false},
   count: 3
 })
 
 function drawScene() {
-  const backgroundColor = [
-    settings.backgroundColor[0] / 255.0,
-    settings.backgroundColor[1] / 255.0,
-    settings.backgroundColor[2] / 255.0,
-    1.0
-  ]
   regl.clear({
-    color: backgroundColor,
+    color: floatColor(settings.backgroundColor).concat([1.0]),
     depth: 1
   })
   drawMote({
