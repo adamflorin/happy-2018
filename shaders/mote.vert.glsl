@@ -1,6 +1,7 @@
 precision mediump float;
 
-#pragma glslify: rotate = require(glsl-y-rotate/rotateY)
+#pragma glslify: rotateY = require(glsl-y-rotate/rotateY)
+#pragma glslify: rotateX = require(glsl-y-rotate/rotateX)
 
 const float scale = 0.2;
 
@@ -24,8 +25,8 @@ void main() {
   surfacePosition.y *= aspect;
 
   // rotate
-  float angle = 0.0; //sin(time);
-  surfacePosition = rotate(angle) * surfacePosition;
+  surfacePosition = rotateY(objectPosition.x) * surfacePosition;
+  surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
 
   // animate light position
   lightPosition = vec3(sin(time), cos(time), -0.0);
