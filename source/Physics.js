@@ -1,3 +1,5 @@
+import settings from './settings'
+
 class Physics {
   constructor() {
     this._object = {
@@ -20,7 +22,7 @@ class Physics {
 
   blow(angle) {
     this._object.forces.wind.angle = angle
-    this._object.forces.wind.force = 0.01
+    this._object.forces.wind.force = settings.initialWindForce
   }
 
   getObjectPosition() {
@@ -33,7 +35,7 @@ class Physics {
 
     // apply wind
     if (this._object.forces.wind.force > 0.0) {
-      this._object.forces.wind.force *= 0.98
+      this._object.forces.wind.force *= settings.windForceDecay
       let windAngle = this._object.forces.wind.angle
       let windForce = this._object.forces.wind.force
       x += Math.cos(windAngle) * windForce
@@ -41,16 +43,17 @@ class Physics {
     }
 
     // apply gravity
-    const gravityInertia = 0.9
     let newGravityAngle = this._wrapRadians(Math.atan2(y, x) + Math.PI)
     const newGravityDistance = Math.sqrt(x * x + y * y)
     if (newGravityDistance > 0.0) {
       // set gravity force (with inertia)
-      let newGravityForce = Math.pow(0.01 / newGravityDistance, 1.0)
-      newGravityForce = Math.min(0.005, newGravityForce)
-      this._object.forces.gravity.force =
-        (this._object.forces.gravity.force * gravityInertia) +
-        (1.0 - gravityInertia) * newGravityForce
+      let newGravityForce = Math.pow(settings.gravityForceNumerator / newGravityDistance, 1.0)
+      newGravityForce = Math.min(settings.maxGravityForce, newGravityForce)
+      this._object.forces.gravity.force = this._mixFloat(
+        this._object.forces.gravity.force,
+        newGravityForce,
+        settings.gravityInertia
+      )
       document.getElementById('level').style.height =
         ('' + (this._object.forces.gravity.force / 0.01 * 100.0) + '%')
 
@@ -59,9 +62,11 @@ class Physics {
         const increase = (this._object.forces.gravity.angle > newGravityAngle)
         newGravityAngle += (2.0 * Math.PI) * (increase ? 1.0 : -1.0)
       }
-      this._object.forces.gravity.angle =
-        (this._object.forces.gravity.angle * gravityInertia) +
-        (1.0 - gravityInertia) * newGravityAngle
+      this._object.forces.gravity.angle = this._mixFloat(
+        this._object.forces.gravity.angle,
+        newGravityAngle,
+        settings.gravityInertia
+      )
 
       // apply gravity
       let gravityAngle = this._object.forces.gravity.angle
@@ -72,6 +77,10 @@ class Physics {
 
     this._object.position.x = x
     this._object.position.y = y
+  }
+
+  _mixFloat(from, to, mix) {
+    return (from * mix) + (1.0 - mix) * to
   }
 
   _wrapRadians(rad) {
