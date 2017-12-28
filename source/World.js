@@ -1,49 +1,28 @@
 import {regl} from './global'
-import dat from 'dat-gui'
+import settings from './settings'
 import physics from './Physics'
 import drawLump from './objects/Lump'
 import drawGrid from './objects/Grid'
 import drawMote from './objects/Mote'
 
-const displayControls = true
 const doPostProcess = false
 
-let umm = 0.0
-let decayId
-
-class Settings {
-  constructor() {
-    this.umm = 0.9
-    this.backgroundColor = [75, 12, 150]
-    this.shadowColor = [25, 0, 25]
-    this.lightAColor = [190, 190, 0]
-    this.lightBColor = [0, 255, 100]
-  }
-}
-const settings = new Settings()
-
-if (displayControls) {
-  const gui = new dat.GUI()
-  gui.add(settings, 'umm', 0.0, 1.0)
-  gui.addColor(settings, 'backgroundColor')
-  gui.addColor(settings, 'shadowColor')
-  gui.addColor(settings, 'lightAColor')
-  gui.addColor(settings, 'lightBColor')
-}
+let decay = 0.0
+let decayIntervalId
 
 function tap(angle) {
   physics.blow(angle + Math.PI)
 }
 
 function trigger() {
-  umm = 1.0
-  clearInterval(decayId)
-  decayId = setInterval(
+  decay = 1.0
+  clearInterval(decayIntervalId)
+  decayIntervalId = setInterval(
     () => {
-      umm -= 0.05
-      if (umm < 0.0) {
-        umm = 0.0
-        clearInterval(decayId)
+      decay -= 0.05
+      if (decay < 0.0) {
+        decay = 0.0
+        clearInterval(decayIntervalId)
       }
     },
     1000.0 / 60.0
@@ -74,7 +53,7 @@ const drawProcessed = regl({
   },
   uniforms: {
     tex: () => fbo,
-    umm: regl.prop('umm'),
+    decay: regl.prop('decay'),
     time: regl.context('time')
   },
   depth: {enable: false},
@@ -117,7 +96,7 @@ regl.frame(({viewportWidth, viewportHeight}) => {
     drawScene()
   } else {
     captureRaw({}, () => drawScene())
-    drawProcessed({umm})
+    drawProcessed({decay})
   }
 })
 

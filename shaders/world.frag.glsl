@@ -29,11 +29,11 @@ precision mediump float;
 varying vec2 uv;
 
 uniform sampler2D tex;
-uniform float umm;
+uniform float decay;
 uniform float time;
 
 void main() {
-  float modtime = 0.6 - pow(umm, 2.0) * 0.2; //sin(time) * 0.25 + 0.75;
+  float modtime = 0.6 - pow(decay, 2.0) * 0.2; //sin(time) * 0.25 + 0.75;
 
   vec2 uvl = uv;
   uvl.x += 0.5;
