@@ -20,6 +20,7 @@ export default regl({
     shadowColor: regl.prop('shadowColor'),
     lightAColor: regl.prop('lightAColor'),
     lightBColor: regl.prop('lightBColor'),
-    objectPosition: regl.prop('objectPosition')
+    objectPosition: regl.prop('objectPosition'),
+    scale: regl.prop('scale')
   }
 })

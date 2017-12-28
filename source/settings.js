@@ -11,6 +11,9 @@ class Settings {
     this.initialWindForce = 0.025
     this.windForceDecay = 0.98
 
+    // Object
+    this.objectScale = 0.2
+
     // Color
     this.backgroundColor = '#f58888'
     this.shadowColor = '#f07070'
@@ -31,6 +34,9 @@ if (displayControls) {
   physicsFolder.add(settings, 'initialWindForce', 0.0, 0.1)
   physicsFolder.add(settings, 'windForceDecay', 0.0, 1.0)
   physicsFolder.open()
+
+  const objectFolder = gui.addFolder('Object')
+  objectFolder.add(settings, 'objectScale', 0.0, 1.0)
 
   const colorFolder = gui.addFolder('Color')
   colorFolder.addColor(settings, 'backgroundColor')

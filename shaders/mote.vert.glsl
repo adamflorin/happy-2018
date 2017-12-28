@@ -3,11 +3,9 @@ precision mediump float;
 #pragma glslify: rotateY = require(glsl-y-rotate/rotateY)
 #pragma glslify: rotateX = require(glsl-y-rotate/rotateX)
 
-const float scale = 0.2;
-
 attribute vec3 position;
 
-uniform float time, width, height;
+uniform float time, width, height, scale;
 uniform vec3 shadowColor, lightAColor, lightBColor;
 uniform vec2 objectPosition;
 

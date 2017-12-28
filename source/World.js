@@ -70,7 +70,8 @@ function drawScene() {
     shadowColor: floatColor(settings.shadowColor),
     lightAColor: floatColor(settings.lightAColor),
     lightBColor: floatColor(settings.lightBColor),
-    objectPosition: physics.getObjectPosition()
+    objectPosition: physics.getObjectPosition(),
+    scale: settings.objectScale
   })
 }
 
