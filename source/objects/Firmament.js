@@ -1,7 +1,7 @@
 import icosphere from 'icosphere'
 import {regl} from '../global'
 
-const mesh = icosphere(3)
+const mesh = icosphere(1)
 
 export default regl({
   frag: require('../../shaders/firmament.frag.glsl'),
