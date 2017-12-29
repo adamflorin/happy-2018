@@ -6,7 +6,7 @@ import drawFirmament from './objects/Firmament'
 import drawGrid from './objects/Grid'
 import drawMote from './objects/Mote'
 
-const doPostProcess = true
+const doPostProcess = false
 
 class World {
   constructor() {
@@ -97,8 +97,8 @@ class World {
           depth: 1
         })
         drawFirmament({
-          zenithColor: [0.0, 0.0, 0.0],
-          horizonColor: [0.0, 1.0, 0.0]
+          zenithColor: [0.6, 0.0, 0.3],
+          horizonColor: [0.4, 0.4, 0.9]
         })
         drawMote({
           shadowColor: this._floatColor(settings.shadowColor),
