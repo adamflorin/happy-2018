@@ -17,8 +17,8 @@ void main() {
   surfacePosition = position * scale;
 
   // rotate
-  surfacePosition = rotateY(objectPosition.x) * surfacePosition;
-  surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
+  surfacePosition = rotateY(time * 0.5) * surfacePosition;
+  // surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
 
   // translate
   surfacePosition.x += objectPosition.x;
