@@ -7,6 +7,10 @@ class Physics {
         x: 0.0,
         y: 0.0
       },
+      lastDelta: {
+        x: 0.0,
+        y: 0.0
+      },
       forces: {
         wind: {
           angle: 0.0,
@@ -33,50 +37,39 @@ class Physics {
     let x = this._object.position.x
     let y = this._object.position.y
 
-    // apply wind
-    if (this._object.forces.wind.force > 0.0) {
-      this._object.forces.wind.force *= settings.windForceDecay
-      let windAngle = this._object.forces.wind.angle
-      let windForce = this._object.forces.wind.force
-      x += Math.cos(windAngle) * windForce
-      y += Math.sin(windAngle) * windForce
+    // compute wind force
+    this._object.forces.wind.force *= settings.windForceDecay
+    if (this._object.forces.wind.force < 0.001) {
+      this._object.forces.wind.force = 0.0
     }
 
-    // apply gravity
-    let newGravityAngle = this._wrapRadians(Math.atan2(y, x) + Math.PI)
+    // compute gravity force
+    this._object.forces.gravity.angle = this._wrapRadians(Math.atan2(y, x) + Math.PI)
     const newGravityDistance = Math.sqrt(x * x + y * y)
-    if (newGravityDistance > 0.0) {
-      // set gravity force (with inertia)
-      let newGravityForce = Math.pow(settings.gravityForceNumerator / newGravityDistance, 1.0)
-      newGravityForce = Math.min(settings.maxGravityForce, newGravityForce)
-      this._object.forces.gravity.force = this._mixFloat(
-        this._object.forces.gravity.force,
-        newGravityForce,
-        settings.gravityInertia
-      )
-      document.getElementById('level').style.height =
-        ('' + (this._object.forces.gravity.force / 0.01 * 100.0) + '%')
-
-      // set gravity angle (with inertia)
-      while (Math.abs(newGravityAngle - this._object.forces.gravity.angle) > Math.PI) {
-        const increase = (this._object.forces.gravity.angle > newGravityAngle)
-        newGravityAngle += (2.0 * Math.PI) * (increase ? 1.0 : -1.0)
-      }
-      this._object.forces.gravity.angle = this._mixFloat(
-        this._object.forces.gravity.angle,
-        newGravityAngle,
-        settings.gravityInertia
-      )
-
-      // apply gravity
-      let gravityAngle = this._object.forces.gravity.angle
-      let gravityForce = this._object.forces.gravity.force
-      x += Math.cos(gravityAngle) * gravityForce
-      y += Math.sin(gravityAngle) * gravityForce
+    if (newGravityDistance > 0.01) {
+      this._object.forces.gravity.force = settings.gravityForceNumerator / newGravityDistance
+      this._object.forces.gravity.force = Math.min(settings.maxGravityForce, this._object.forces.gravity.force)
+    } else {
+      this._object.forces.gravity.force = 0.0
     }
 
-    this._object.position.x = x
-    this._object.position.y = y
+    // sum force deltas
+    const windDelta = this._computeDelta(this._object.forces.wind)
+    const gravityDelta = this._computeDelta(this._object.forces.gravity)
+    const newSumDelta = {
+      x: (windDelta.x + gravityDelta.x) / 2.0,
+      y: (windDelta.y + gravityDelta.y) / 2.0
+    }
+
+    // apply inertia to delta
+    this._object.lastDelta = {
+      x: this._mixFloat(this._object.lastDelta.x, newSumDelta.x, settings.gravityInertia),
+      y: this._mixFloat(this._object.lastDelta.y, newSumDelta.y, settings.gravityInertia)
+    }
+
+    // apply delta
+    this._object.position.x += this._object.lastDelta.x
+    this._object.position.y += this._object.lastDelta.y
   }
 
   _mixFloat(from, to, mix) {
@@ -89,6 +82,13 @@ class Physics {
       rad -= Math.PI * 2.0
     }
     return rad
+  }
+
+  _computeDelta(force) {
+    return {
+      x: Math.cos(force.angle) * force.force,
+      y: Math.sin(force.angle) * force.force
+    }
   }
 }
 
