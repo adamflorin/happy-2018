@@ -45,7 +45,7 @@ class Physics {
 
     // compute gravity force
     this._object.forces.gravity.angle = this._wrapRadians(Math.atan2(y, x) + Math.PI)
-    const newGravityDistance = Math.sqrt(x * x + y * y)
+    const newGravityDistance = this.objectGravityDistance()
     if (newGravityDistance > 0.01) {
       this._object.forces.gravity.magnitude = settings.gravityForceNumerator / newGravityDistance
       this._object.forces.gravity.magnitude = Math.min(settings.maxGravityForce, this._object.forces.gravity.magnitude)
@@ -70,6 +70,12 @@ class Physics {
     // apply delta
     this._object.position.x += this._object.lastDelta.x
     this._object.position.y += this._object.lastDelta.y
+  }
+
+  objectGravityDistance() {
+    let x = this._object.position.x
+    let y = this._object.position.y
+    return Math.sqrt(x * x + y * y)
   }
 
   _mixFloat(from, to, mix) {

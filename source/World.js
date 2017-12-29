@@ -41,18 +41,28 @@ class World {
       count: 3
     })
 
-    regl.frame(({viewportWidth, viewportHeight}) => {
-      this._fbo.resize(viewportWidth, viewportHeight)
+    regl.frame(context => this._onFrame(context))
+  }
 
-      physics.step()
+  onStep(callback) {
+    this._stepCallback = callback
+  }
 
-      if (!doPostProcess) {
-        this._drawScene()
-      } else {
-        this._captureRaw({}, () => this._drawScene())
-        this._drawProcessed()
-      }
-    })
+  _onFrame({viewportWidth, viewportHeight}) {
+    this._fbo.resize(viewportWidth, viewportHeight)
+
+    physics.step()
+
+    if (this._stepCallback) {
+      this._stepCallback()
+    }
+
+    if (!doPostProcess) {
+      this._drawScene()
+    } else {
+      this._captureRaw({}, () => this._drawScene())
+      this._drawProcessed()
+    }
   }
 
   _drawScene() {

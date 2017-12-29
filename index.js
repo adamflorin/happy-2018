@@ -3,6 +3,21 @@ import physics from './source/Physics'
 import world from './source/World'
 import {playSound} from './source/Audio'
 
+const objectGravityDistanceThreshold = 0.001
+
+let objectWasStable = true
+
+world.onStep(() => {
+  let objectGravityDistance = physics.objectGravityDistance()
+  let objectIsStable = (objectGravityDistance < objectGravityDistanceThreshold)
+
+  if (objectWasStable && !objectIsStable) {
+    playSound()
+  }
+
+  objectWasStable = objectIsStable
+})
+
 document.getElementsByTagName('canvas')[0].addEventListener(
   'mousedown',
   event => {
