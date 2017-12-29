@@ -15,16 +15,18 @@ varying vec3 vShadowColor, vLightAColor, vLightBColor;
 void main() {
   // scale
   surfacePosition = position * scale;
+
+  // rotate
+  surfacePosition = rotateY(objectPosition.x) * surfacePosition;
+  surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
+
+  // translate
   surfacePosition.x += objectPosition.x;
   surfacePosition.y += objectPosition.y;
 
   // aspect
   float aspect = width / height;
   surfacePosition.y *= aspect;
-
-  // rotate
-  surfacePosition = rotateY(objectPosition.x) * surfacePosition;
-  surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
 
   // animate light position
   lightPosition = vec3(sin(time), cos(time), 0.25);
