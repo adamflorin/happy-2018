@@ -8,7 +8,7 @@ class Settings {
     this.gravityInertia = 0.9
     this.gravityForceNumerator = 0.01
     this.maxGravityForce = 0.015
-    this.initialWindForce = 0.025
+    this.initialWindForce = 0.05
     this.windForceDecay = 0.98
 
     // Object
