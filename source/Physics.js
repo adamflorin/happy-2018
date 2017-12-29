@@ -14,11 +14,11 @@ class Physics {
       forces: {
         wind: {
           angle: 0.0,
-          force: 0.0
+          magnitude: 0.0
         },
         gravity: {
           angle: 0.0,
-          force: 0.0
+          magnitude: 0.0
         }
       }
     }
@@ -26,7 +26,7 @@ class Physics {
 
   blow(angle) {
     this._object.forces.wind.angle = angle
-    this._object.forces.wind.force = settings.initialWindForce
+    this._object.forces.wind.magnitude = settings.initialWindForce
   }
 
   getObjectPosition() {
@@ -38,19 +38,19 @@ class Physics {
     let y = this._object.position.y
 
     // compute wind force
-    this._object.forces.wind.force *= settings.windForceDecay
-    if (this._object.forces.wind.force < 0.001) {
-      this._object.forces.wind.force = 0.0
+    this._object.forces.wind.magnitude *= settings.windForceDecay
+    if (this._object.forces.wind.magnitude < 0.001) {
+      this._object.forces.wind.magnitude = 0.0
     }
 
     // compute gravity force
     this._object.forces.gravity.angle = this._wrapRadians(Math.atan2(y, x) + Math.PI)
     const newGravityDistance = Math.sqrt(x * x + y * y)
     if (newGravityDistance > 0.01) {
-      this._object.forces.gravity.force = settings.gravityForceNumerator / newGravityDistance
-      this._object.forces.gravity.force = Math.min(settings.maxGravityForce, this._object.forces.gravity.force)
+      this._object.forces.gravity.magnitude = settings.gravityForceNumerator / newGravityDistance
+      this._object.forces.gravity.magnitude = Math.min(settings.maxGravityForce, this._object.forces.gravity.magnitude)
     } else {
-      this._object.forces.gravity.force = 0.0
+      this._object.forces.gravity.magnitude = 0.0
     }
 
     // sum force deltas
@@ -86,8 +86,8 @@ class Physics {
 
   _computeDelta(force) {
     return {
-      x: Math.cos(force.angle) * force.force,
-      y: Math.sin(force.angle) * force.force
+      x: Math.cos(force.angle) * force.magnitude,
+      y: Math.sin(force.angle) * force.magnitude
     }
   }
 }
