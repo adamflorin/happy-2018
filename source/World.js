@@ -85,9 +85,9 @@ class World {
   }
 
   _drawScene() {
-    let eye = [0.0, 1.0, 3.0]
-    let center = [0.0, 0.0, 0.0]
-    let up = [0.0, 1.0, 0.0]
+    let eye = [1.0, 0.0, 3.0]
+    let center = [1.0, 0.0, 0.0]
+    let up = [1.0, 0.0, 0.0]
 
     seeThroughCamera(
       {eye, center, up},
