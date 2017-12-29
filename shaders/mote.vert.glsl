@@ -25,10 +25,6 @@ void main() {
   surfacePosition.x += objectPosition.x;
   surfacePosition.z -= objectPosition.y;
 
-  // distort
-  surfacePosition.x *= 1.0 + 0.8 * abs(surfacePosition.y);
-  surfacePosition.z *= 1.0 + 0.8 * abs(surfacePosition.y);
-
   // animate light position
   lightPosition = vec3(sin(time), cos(time), 0.25);
 
