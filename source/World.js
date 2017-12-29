@@ -2,6 +2,7 @@ import {regl} from './global'
 import settings from './settings'
 import physics from './Physics'
 import seeThroughCamera from './Camera'
+import drawFirmament from './objects/Firmament'
 import drawGrid from './objects/Grid'
 import drawMote from './objects/Mote'
 
@@ -94,6 +95,10 @@ class World {
         regl.clear({
           color: this._floatColor(settings.backgroundColor).concat([1.0]),
           depth: 1
+        })
+        drawFirmament({
+          zenithColor: [0.0, 0.0, 0.0],
+          horizonColor: [0.0, 1.0, 0.0]
         })
         drawMote({
           shadowColor: this._floatColor(settings.shadowColor),
