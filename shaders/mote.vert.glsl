@@ -27,7 +27,7 @@ void main() {
   surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
 
   // animate light position
-  lightPosition = vec3(sin(time), cos(time), -0.0);
+  lightPosition = vec3(sin(time), cos(time), 0.25);
 
   // pass light colors through
   vShadowColor = shadowColor;
