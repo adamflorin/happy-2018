@@ -3,7 +3,7 @@ import physics from './source/Physics'
 import world from './source/World'
 import {playSound} from './source/Audio'
 
-const objectGravityDistanceThreshold = 0.001
+const objectGravityDistanceThreshold = 0.01
 
 let objectWasStable = true
 
