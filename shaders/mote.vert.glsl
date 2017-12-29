@@ -5,7 +5,8 @@ precision mediump float;
 
 attribute vec3 position;
 
-uniform float time, width, height, scale;
+uniform mat4 projection, view;
+uniform float time, scale;
 uniform vec3 shadowColor, lightAColor, lightBColor;
 uniform vec2 objectPosition;
 
@@ -21,12 +22,8 @@ void main() {
   surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
 
   // translate
-  surfacePosition.x += objectPosition.x;
+  surfacePosition.z -= objectPosition.x;
   surfacePosition.y += objectPosition.y;
-
-  // aspect
-  float aspect = width / height;
-  surfacePosition.y *= aspect;
 
   // animate light position
   lightPosition = vec3(sin(time), cos(time), 0.25);
@@ -36,5 +33,5 @@ void main() {
   vLightAColor = lightAColor;
   vLightBColor = lightBColor;
 
-  gl_Position = vec4(surfacePosition, 1.0);
+  gl_Position = projection * view * vec4(surfacePosition, 1.0);
 }

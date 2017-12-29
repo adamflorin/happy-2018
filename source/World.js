@@ -1,4 +1,4 @@
-import {regl} from './global'
+import {regl, camera} from './global'
 import settings from './settings'
 import physics from './Physics'
 import drawLump from './objects/Lump'
@@ -84,16 +84,18 @@ class World {
   }
 
   _drawScene() {
-    regl.clear({
-      color: this._floatColor(settings.backgroundColor).concat([1.0]),
-      depth: 1
-    })
-    drawMote({
-      shadowColor: this._floatColor(settings.shadowColor),
-      lightAColor: this._floatColor(settings.lightAColor),
-      lightBColor: this._floatColor(settings.lightBColor),
-      objectPosition: physics.getObjectPosition(),
-      scale: settings.objectScale + 0.05 * this._decay
+    camera(state => {
+      regl.clear({
+        color: this._floatColor(settings.backgroundColor).concat([1.0]),
+        depth: 1
+      })
+      drawMote({
+        shadowColor: this._floatColor(settings.shadowColor),
+        lightAColor: this._floatColor(settings.lightAColor),
+        lightBColor: this._floatColor(settings.lightBColor),
+        objectPosition: physics.getObjectPosition(),
+        scale: settings.objectScale + 0.05 * this._decay
+      })
     })
   }
 

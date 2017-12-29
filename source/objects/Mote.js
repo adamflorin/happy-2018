@@ -15,8 +15,6 @@ export default regl({
 
   uniforms: {
     time: regl.context('time'),
-    width: regl.context('viewportWidth'),
-    height: regl.context('viewportHeight'),
     shadowColor: regl.prop('shadowColor'),
     lightAColor: regl.prop('lightAColor'),
     lightBColor: regl.prop('lightBColor'),
