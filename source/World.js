@@ -1,7 +1,7 @@
-import {regl, camera} from './global'
+import {regl} from './global'
 import settings from './settings'
 import physics from './Physics'
-import drawLump from './objects/Lump'
+import seeThroughCamera from './Camera'
 import drawGrid from './objects/Grid'
 import drawMote from './objects/Mote'
 
@@ -84,19 +84,27 @@ class World {
   }
 
   _drawScene() {
-    camera(state => {
-      regl.clear({
-        color: this._floatColor(settings.backgroundColor).concat([1.0]),
-        depth: 1
-      })
-      drawMote({
-        shadowColor: this._floatColor(settings.shadowColor),
-        lightAColor: this._floatColor(settings.lightAColor),
-        lightBColor: this._floatColor(settings.lightBColor),
-        objectPosition: physics.getObjectPosition(),
-        scale: settings.objectScale + 0.05 * this._decay
-      })
-    })
+    let eye = [0.0, 1.0, 3.0]
+    let center = [0.0, 0.0, 0.0]
+    let up = [0.0, 1.0, 0.0]
+
+    seeThroughCamera(
+      {eye, center, up},
+      () => {
+        regl.clear({
+          color: this._floatColor(settings.backgroundColor).concat([1.0]),
+          depth: 1
+        })
+        drawMote({
+          shadowColor: this._floatColor(settings.shadowColor),
+          lightAColor: this._floatColor(settings.lightAColor),
+          lightBColor: this._floatColor(settings.lightBColor),
+          objectPosition: physics.getObjectPosition(),
+          scale: settings.objectScale + 0.05 * this._decay
+        })
+        drawGrid()
+      }
+    )
   }
 
   _floatColor(intColor) {

@@ -5,12 +5,15 @@ export default regl({
   vert: require('../../shaders/grid.vert.glsl'),
 
   attributes: {
-    position: [ -4, -4, 4, -4, 0, 4 ] // lol render in oversized triangle
+    position: [
+      [-1, 0, -1], [-1, 0, 1], [1, 0, 1],
+      [1, 0, 1], [1, 0, -1], [-1, 0, -1]
+    ]
   },
-  count: 3,
+  count: 6,
 
   uniforms: {
-    time: regl.context('time')
+    color: [0.0, 0.0, 0.5]
   },
 
   blend: {

@@ -1,11 +1,9 @@
 precision mediump float;
 
-attribute vec2 position;
+attribute vec3 position;
 
-varying vec2 uv;
+uniform mat4 projection, view;
 
 void main() {
-  uv = 0.5 * (position + 1.0);
-
-  gl_Position = vec4(position, 0.25, 1.0);
+  gl_Position = projection * view * vec4(position, 1.0);
 }

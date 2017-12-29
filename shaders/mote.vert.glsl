@@ -22,8 +22,8 @@ void main() {
   surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
 
   // translate
-  surfacePosition.z -= objectPosition.x;
-  surfacePosition.y += objectPosition.y;
+  surfacePosition.x += objectPosition.x;
+  surfacePosition.z -= objectPosition.y;
 
   // animate light position
   lightPosition = vec3(sin(time), cos(time), 0.25);

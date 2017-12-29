@@ -1,16 +1,9 @@
-import reglModule from 'regl'
-import cameraModule from 'regl-camera'
+import wrapREGL from 'regl'
 
-const regl = reglModule({
+const regl = wrapREGL({
   extensions: ['OES_standard_derivatives']
 })
 
-const camera = cameraModule(regl, {
-  distance: 3.0,
-  mouse: false
-})
-
 module.exports = {
-  regl,
-  camera
+  regl
 }
