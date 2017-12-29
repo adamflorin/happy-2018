@@ -1,4 +1,5 @@
 import sequencer from './source/Sequencer'
+import {regl} from './source/global'
 import {trigger, tap} from './source/World'
 import {playSound} from './source/Audio'
 
@@ -9,7 +10,7 @@ sequencer.setCallback(() => {
 
 // sequencer.start()
 
-window.addEventListener(
+document.getElementsByTagName('canvas')[0].addEventListener(
   'mousedown',
   event => {
     const x = (event.x / window.innerWidth - 0.5) * 2.0
