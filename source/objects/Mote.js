@@ -10,7 +10,6 @@ export default regl({
   attributes: {
     position: mesh.positions
   },
-
   elements: mesh.cells,
 
   uniforms: {
