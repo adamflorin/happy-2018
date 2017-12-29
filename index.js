@@ -13,6 +13,7 @@ world.onStep(() => {
 
   if (objectWasStable && !objectIsStable) {
     playSound()
+    world.trigger()
   }
 
   objectWasStable = objectIsStable

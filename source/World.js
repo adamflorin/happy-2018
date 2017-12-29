@@ -9,6 +9,9 @@ const doPostProcess = true
 
 class World {
   constructor() {
+    this._decay = 0.0
+    this._decayIntervalId
+
     this._fbo = regl.framebuffer({
       color: regl.texture({
         width: 1,
@@ -48,6 +51,21 @@ class World {
     this._stepCallback = callback
   }
 
+  trigger() {
+    this._decay = 1.0
+    clearInterval(this._decayIntervalId)
+    this._decayIntervalId = setInterval(
+      () => {
+        this._decay -= 0.05
+        if (this._decay < 0.0) {
+          this._decay = 0.0
+          clearInterval(this._decayIntervalId)
+        }
+      },
+      1000.0 / 60.0
+    )
+  }
+
   _onFrame({viewportWidth, viewportHeight}) {
     this._fbo.resize(viewportWidth, viewportHeight)
 
@@ -75,7 +93,7 @@ class World {
       lightAColor: this._floatColor(settings.lightAColor),
       lightBColor: this._floatColor(settings.lightBColor),
       objectPosition: physics.getObjectPosition(),
-      scale: settings.objectScale
+      scale: settings.objectScale + 0.05 * this._decay
     })
   }
 
