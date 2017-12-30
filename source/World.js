@@ -1,7 +1,6 @@
-import './graphics/environment'
-import physics from './Physics'
 import graphics from './Graphics'
 import audio from './Audio'
+import physics from './Physics'
 
 const numObjects = 2
 const objectGravityDistanceThreshold = 0.01
