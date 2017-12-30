@@ -10,7 +10,7 @@ let objectWasStable = true
 audio.init()
 
 world.onStep(() => {
-  let objectGravityDistance = physics.objectGravityDistance()
+  let objectGravityDistance = physics.getObjectGravityDistance(0)
   let objectIsStable = (objectGravityDistance < objectGravityDistanceThreshold)
 
   if (objectWasStable && !objectIsStable) {
@@ -27,6 +27,6 @@ document.getElementsByTagName('canvas')[0].addEventListener(
     const x = (event.x / window.innerWidth - 0.5) * 2.0
     const y = (event.y / window.innerHeight - 0.5) * 2.0
     const angle = Math.atan2(-y, x)
-    physics.blow(angle + Math.PI)
+    physics.blow(0, angle + Math.PI)
   }
 )

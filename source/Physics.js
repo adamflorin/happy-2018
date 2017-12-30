@@ -1,8 +1,46 @@
 import settings from './settings'
+import {mix, wrapRadians, computeDelta} from './utils'
+
+const numObjects = 1
 
 class Physics {
   constructor() {
-    this._object = {
+    this._initObjects()
+  }
+
+  blow(objectIndex, angle) {
+    let firstObject = this._objects[objectIndex]
+    firstObject.forces.wind.angle = angle
+    firstObject.forces.wind.magnitude = settings.initialWindForce
+  }
+
+  getObjectPosition(objectIndex) {
+    let object = this._objects[objectIndex]
+    return [object.position.x, object.position.y]
+  }
+
+  getObjectGravityDistance(objectIndex) {
+    let object = this._objects[objectIndex]
+    let x = object.position.x
+    let y = object.position.y
+    return Math.sqrt(x * x + y * y)
+  }
+
+  step() {
+    this._objects.forEach((object, objectIndex) => {
+      this._stepObject(object, objectIndex)
+    })
+  }
+
+  _initObjects() {
+    this._objects = []
+    for (let index = 0; index < numObjects; index++) {
+      this._objects.push(this._initObject())
+    }
+  }
+
+  _initObject() {
+    return {
       position: {
         x: 0.0,
         y: 0.0
@@ -24,77 +62,43 @@ class Physics {
     }
   }
 
-  blow(angle) {
-    this._object.forces.wind.angle = angle
-    this._object.forces.wind.magnitude = settings.initialWindForce
-  }
-
-  getObjectPosition() {
-    return [this._object.position.x, this._object.position.y]
-  }
-
-  step() {
-    let x = this._object.position.x
-    let y = this._object.position.y
+  _stepObject(object, objectIndex) {
+    let x = object.position.x
+    let y = object.position.y
 
     // compute wind force
-    this._object.forces.wind.magnitude *= settings.windForceDecay
-    if (this._object.forces.wind.magnitude < 0.001) {
-      this._object.forces.wind.magnitude = 0.0
+    object.forces.wind.magnitude *= settings.windForceDecay
+    if (object.forces.wind.magnitude < 0.001) {
+      object.forces.wind.magnitude = 0.0
     }
 
     // compute gravity force
-    this._object.forces.gravity.angle = this._wrapRadians(Math.atan2(y, x) + Math.PI)
-    const newGravityDistance = this.objectGravityDistance()
+    object.forces.gravity.angle = wrapRadians(Math.atan2(y, x) + Math.PI)
+    const newGravityDistance = this.getObjectGravityDistance(objectIndex)
     if (newGravityDistance > 0.01) {
-      this._object.forces.gravity.magnitude = settings.gravityForceNumerator / newGravityDistance
-      this._object.forces.gravity.magnitude = Math.min(settings.maxGravityForce, this._object.forces.gravity.magnitude)
+      object.forces.gravity.magnitude = settings.gravityForceNumerator / newGravityDistance
+      object.forces.gravity.magnitude = Math.min(settings.maxGravityForce, object.forces.gravity.magnitude)
     } else {
-      this._object.forces.gravity.magnitude = 0.0
+      object.forces.gravity.magnitude = 0.0
     }
 
     // sum force deltas
-    const windDelta = this._computeDelta(this._object.forces.wind)
-    const gravityDelta = this._computeDelta(this._object.forces.gravity)
+    const windDelta = computeDelta(object.forces.wind)
+    const gravityDelta = computeDelta(object.forces.gravity)
     const newSumDelta = {
-      x: (windDelta.x + gravityDelta.x) / 2.0,
-      y: (windDelta.y + gravityDelta.y) / 2.0
+      x: (windDelta.x + gravityDelta.x),
+      y: (windDelta.y + gravityDelta.y)
     }
 
     // apply inertia to delta
-    this._object.lastDelta = {
-      x: this._mixFloat(this._object.lastDelta.x, newSumDelta.x, settings.gravityInertia),
-      y: this._mixFloat(this._object.lastDelta.y, newSumDelta.y, settings.gravityInertia)
+    object.lastDelta = {
+      x: mix(object.lastDelta.x, newSumDelta.x, settings.gravityInertia),
+      y: mix(object.lastDelta.y, newSumDelta.y, settings.gravityInertia)
     }
 
     // apply delta
-    this._object.position.x += this._object.lastDelta.x
-    this._object.position.y += this._object.lastDelta.y
-  }
-
-  objectGravityDistance() {
-    let x = this._object.position.x
-    let y = this._object.position.y
-    return Math.sqrt(x * x + y * y)
-  }
-
-  _mixFloat(from, to, mix) {
-    return (from * mix) + (1.0 - mix) * to
-  }
-
-  _wrapRadians(rad) {
-    rad = rad % (Math.PI * 2.0)
-    if (rad > Math.PI) {
-      rad -= Math.PI * 2.0
-    }
-    return rad
-  }
-
-  _computeDelta(force) {
-    return {
-      x: Math.cos(force.angle) * force.magnitude,
-      y: Math.sin(force.angle) * force.magnitude
-    }
+    object.position.x += object.lastDelta.x
+    object.position.y += object.lastDelta.y
   }
 }
 

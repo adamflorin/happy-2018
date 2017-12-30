@@ -25,8 +25,8 @@ void main() {
   surfacePosition.x += objectPosition.x;
   surfacePosition.z -= objectPosition.y;
 
-  // animate light position
-  lightPosition = vec3(sin(time), cos(time), 0.25);
+  // light position
+  lightPosition = vec3(0.0, 0.0, 1.0);
 
   // pass light colors through
   vShadowColor = shadowColor;

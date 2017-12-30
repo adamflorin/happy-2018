@@ -19,5 +19,13 @@ export default regl({
     lightBColor: regl.prop('lightBColor'),
     objectPosition: regl.prop('objectPosition'),
     scale: regl.prop('scale')
+  },
+
+  blend: {
+    enable: true,
+    func: {
+      src: 1,
+      dst: 'one minus src alpha'
+    }
   }
 })

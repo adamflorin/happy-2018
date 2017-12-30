@@ -3,7 +3,6 @@ import settings from './settings'
 import physics from './Physics'
 import seeThroughCamera from './Camera'
 import drawFirmament from './objects/Firmament'
-import drawGrid from './objects/Grid'
 import drawMote from './objects/Mote'
 
 const doPostProcess = true
@@ -96,18 +95,34 @@ class World {
           color: this._floatColor(settings.backgroundColor).concat([1.0]),
           depth: 1
         })
+
         drawFirmament({
           zenithColor: [0.6, 0.0, 0.3],
           horizonColor: [0.4, 0.4, 0.9]
         })
-        drawMote({
+
+        const moteProps = {
           shadowColor: this._floatColor(settings.shadowColor),
           lightAColor: this._floatColor(settings.lightAColor),
-          lightBColor: this._floatColor(settings.lightBColor),
-          objectPosition: physics.getObjectPosition(),
-          scale: settings.objectScale + 0.05 * this._decay
-        })
-        drawGrid()
+          lightBColor: this._floatColor(settings.lightBColor)
+        }
+
+        drawMote([
+          Object.assign(
+            {
+              objectPosition: physics.getObjectPosition(0),
+              scale: settings.objectScale + 0.05 * this._decay
+            },
+            moteProps
+          ),
+          Object.assign(
+            {
+              objectPosition: [0.0, 0.0],
+              scale: settings.objectScale
+            },
+            moteProps
+          )
+        ])
       }
     )
   }
