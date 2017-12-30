@@ -1,6 +1,6 @@
 import './source/global'
 import physics from './source/Physics'
-import world from './source/World'
+import graphics from './source/Graphics'
 import audio from './source/Audio'
 
 const numObjects = 2
@@ -10,19 +10,19 @@ const objectGravityDistanceThreshold = 0.01
 let objectWasStable = true
 
 function init() {
-  world.setNumObjects(numObjects)
+  graphics.setNumObjects(numObjects)
   physics.createObjects(numObjects)
   audio.createStrikes(numObjects)
   audio.init()
 }
 
-world.onStep(() => {
+graphics.onStep(() => {
   let objectGravityDistance = physics.getObjectGravityDistance(0)
   let objectIsStable = (objectGravityDistance < objectGravityDistanceThreshold)
 
   if (objectWasStable && !objectIsStable) {
     audio.triggerStrike()
-    world.trigger()
+    graphics.trigger()
   }
 
   objectWasStable = objectIsStable

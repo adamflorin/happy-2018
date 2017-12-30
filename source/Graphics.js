@@ -7,7 +7,7 @@ import drawMote from './objects/Mote'
 
 const doPostProcess = true
 
-class World {
+class Graphics {
   constructor() {
     this._decay = 0.0
     this._decayIntervalId
@@ -29,8 +29,8 @@ class World {
     })
 
     this._drawProcessed = regl({
-      vert: require('../shaders/world.vert.glsl'),
-      frag: require('../shaders/world.frag.glsl'),
+      vert: require('../shaders/post.vert.glsl'),
+      frag: require('../shaders/post.frag.glsl'),
       attributes: {
         position: [ -4, -4, 4, -4, 0, 4 ] // lol render in oversized triangle
       },
@@ -136,4 +136,4 @@ class World {
   }
 }
 
-export default new World()
+export default new Graphics()
