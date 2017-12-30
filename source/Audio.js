@@ -38,10 +38,8 @@ class Audio {
     }).connect(this._masterLimiter)
   }
 
-  triggerStrike() {
-    this._strikes.forEach(strike => {
-      strike.trigger()
-    })
+  triggerStrike(objectIndex) {
+    this._strikes[objectIndex].trigger()
   }
 }
 

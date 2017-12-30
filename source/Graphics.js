@@ -9,8 +9,7 @@ const doPostProcess = true
 
 class Graphics {
   constructor() {
-    this._decay = 0.0
-    this._decayIntervalId
+    this._objectStates = []
 
     this._fbo = regl.framebuffer({
       color: regl.texture({
@@ -49,35 +48,44 @@ class Graphics {
 
   setNumObjects(numObjects) {
     this._numObjects = numObjects
+    this._initObjectStates()
   }
 
-  onStep(callback) {
+  onFrame(callback) {
     this._stepCallback = callback
   }
 
-  trigger() {
-    this._decay = 1.0
-    clearInterval(this._decayIntervalId)
-    this._decayIntervalId = setInterval(
+  trigger(objectIndex) {
+    let objectState = this._objectStates[objectIndex]
+    objectState.decay = 1.0
+    clearInterval(objectState.decayIntervalId)
+    objectState.decayIntervalId = setInterval(
       () => {
-        this._decay -= 0.05
-        if (this._decay < 0.0) {
-          this._decay = 0.0
-          clearInterval(this._decayIntervalId)
+        objectState.decay -= 0.05
+        if (objectState.decay < 0.0) {
+          objectState.decay = 0.0
+          clearInterval(objectState.decayIntervalId)
         }
       },
       1000.0 / 60.0
     )
   }
 
+  _initObjectStates() {
+    for (var index = 0; index < this._numObjects; index++) {
+      this._objectStates.push({
+        decay: 0.0,
+        decayIntervalId: null
+      })
+    }
+  }
+
   _onFrame({viewportWidth, viewportHeight}) {
-    this._fbo.resize(viewportWidth, viewportHeight)
-
-    physics.step()
-
     if (this._stepCallback) {
       this._stepCallback()
     }
+
+    this._fbo.resize(viewportWidth, viewportHeight)
 
     if (!doPostProcess) {
       this._drawScene()
@@ -116,7 +124,7 @@ class Graphics {
             Object.assign(
               {
                 objectPosition: physics.getObjectPosition(index),
-                scale: settings.objectScale + 0.05 * this._decay
+                scale: settings.objectScale + 0.05 * this._objectStates[index].decay
               },
               moteBaseProps
             )

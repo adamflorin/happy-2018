@@ -1,6 +1,8 @@
 import settings from './settings'
 import {mix, wrapRadians, computeDelta} from './utils'
 
+const objectGravityDistanceThreshold = 0.01
+
 class Physics {
   constructor() {
     this._objects = []
@@ -27,7 +29,19 @@ class Physics {
   step() {
     this._objects.forEach((object, objectIndex) => {
       this._stepObject(object, objectIndex)
+
+      let objectWasStable = object.stable
+      let objectGravityDistance = this.getObjectGravityDistance(objectIndex)
+      object.stable = (objectGravityDistance < objectGravityDistanceThreshold)
+
+      if (objectWasStable && !object.stable) {
+        this._objectStrikeCallback(objectIndex)
+      }
     })
+  }
+
+  onObjectStrike(objectStrikeCallback) {
+    this._objectStrikeCallback = objectStrikeCallback
   }
 
   createObjects(numObjects) {
@@ -42,6 +56,7 @@ class Physics {
         x: 0.0,
         y: 0.0
       },
+      stable: true,
       lastDelta: {
         x: 0.0,
         y: 0.0
