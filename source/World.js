@@ -2,8 +2,7 @@ import graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
 
-const numObjects = 2
-
+const numObjects = 3
 
 class World {
   constructor() {

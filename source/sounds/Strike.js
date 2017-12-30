@@ -33,7 +33,7 @@ export default class Strike {
     return new Tone.Oscillator({
     	partials: this._generatePartials(),
     	type: "custom",
-    	frequency: index == 0 ? "C#2" : "G#2",
+    	frequency: (index == 0 ? "C#2" : (index === 1 ? "G#2" : "B2")),
     	volume: -12,
     })
   }
