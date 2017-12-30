@@ -37,6 +37,17 @@ class Physics {
       if (objectWasStable && !object.stable) {
         this._objectStrikeCallback(objectIndex)
       }
+
+      if (!objectWasStable && object.stable) {
+        // FIXME: proof-of-concept collision logic. assumes 2 objects.
+        const recipientObjectIndex = 1 - objectIndex
+        if (this._objects[recipientObjectIndex].stable) {
+          this._objects[recipientObjectIndex].forces.wind = {
+            angle: wrapRadians(object.forces.wind.angle + Math.PI),
+            magnitude: settings.initialWindForce
+          }
+        }
+      }
     })
   }
 

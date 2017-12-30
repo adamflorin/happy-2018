@@ -34,7 +34,6 @@ class World {
         const y = (event.y / window.innerHeight - 0.5) * 2.0
         const angle = Math.atan2(-y, x)
         physics.blow(0, angle + Math.PI)
-        physics.blow(1, angle) // TEMP: mirror
       }
     )
   }
