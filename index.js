@@ -3,11 +3,18 @@ import physics from './source/Physics'
 import world from './source/World'
 import audio from './source/Audio'
 
+const numObjects = 2
+
 const objectGravityDistanceThreshold = 0.01
 
 let objectWasStable = true
 
-audio.init()
+function init() {
+  world.setNumObjects(numObjects)
+  physics.createObjects(numObjects)
+  audio.createStrikes(numObjects)
+  audio.init()
+}
 
 world.onStep(() => {
   let objectGravityDistance = physics.getObjectGravityDistance(0)
@@ -31,3 +38,5 @@ document.getElementsByTagName('canvas')[0].addEventListener(
     physics.blow(1, angle)
   }
 )
+
+init()

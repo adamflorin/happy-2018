@@ -1,11 +1,9 @@
 import settings from './settings'
 import {mix, wrapRadians, computeDelta} from './utils'
 
-const numObjects = 2
-
 class Physics {
   constructor() {
-    this._initObjects()
+    this._objects = []
   }
 
   blow(objectIndex, angle) {
@@ -32,14 +30,13 @@ class Physics {
     })
   }
 
-  _initObjects() {
-    this._objects = []
+  createObjects(numObjects) {
     for (let index = 0; index < numObjects; index++) {
-      this._objects.push(this._initObject())
+      this._objects.push(this._createObject())
     }
   }
 
-  _initObject() {
+  _createObject() {
     return {
       position: {
         x: 0.0,

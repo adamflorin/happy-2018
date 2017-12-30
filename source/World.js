@@ -47,6 +47,10 @@ class World {
     regl.frame(context => this._onFrame(context))
   }
 
+  setNumObjects(numObjects) {
+    this._numObjects = numObjects
+  }
+
   onStep(callback) {
     this._stepCallback = callback
   }
@@ -101,28 +105,24 @@ class World {
           horizonColor: [0.4, 0.4, 0.9]
         })
 
-        const moteProps = {
+        const moteBaseProps = {
           shadowColor: this._floatColor(settings.shadowColor),
           lightAColor: this._floatColor(settings.lightAColor),
           lightBColor: this._floatColor(settings.lightBColor)
         }
-
-        drawMote([
-          Object.assign(
-            {
-              objectPosition: physics.getObjectPosition(0),
-              scale: settings.objectScale + 0.05 * this._decay
-            },
-            moteProps
-          ),
-          Object.assign(
-            {
-              objectPosition: physics.getObjectPosition(1),
-              scale: settings.objectScale
-            },
-            moteProps
+        const moteProps = []
+        for (var index = 0; index < this._numObjects; index++) {
+          moteProps.push(
+            Object.assign(
+              {
+                objectPosition: physics.getObjectPosition(index),
+                scale: settings.objectScale + 0.05 * this._decay
+              },
+              moteBaseProps
+            )
           )
-        ])
+        }
+        drawMote(moteProps)
       }
     )
   }

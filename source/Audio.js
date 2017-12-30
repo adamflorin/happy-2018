@@ -1,15 +1,24 @@
 import Tone from 'tone'
 import StartAudioContext from 'startaudiocontext'
-import strike from './sounds/Strike'
+import Strike from './sounds/Strike'
 
 class Audio {
   constructor() {
-    //
+    this._strikes = []
+    this._initMobileSwitch()
+  }
+
+  createStrikes(numStrikes) {
+    for (var index = 0; index < numStrikes; index++) {
+      this._strikes.push(new Strike(index))
+    }
   }
 
   init() {
-    this._initMobileSwitch()
     this._initMixer()
+    this._strikes.forEach(strike => {
+      strike.connect(this._masterGain)
+    })
   }
 
   _initMobileSwitch() {
@@ -20,21 +29,19 @@ class Audio {
   }
 
   _initMixer() {
-    // master limiter
-    const masterLimiter = new Tone.Limiter({
+    this._masterLimiter = new Tone.Limiter({
       threshold: -6.0
     }).toMaster()
 
-    // master gain
-    const masterGain = new Tone.Gain({
+    this._masterGain = new Tone.Gain({
       gain: 1.1
-    }).connect(masterLimiter)
-
-    strike.connect(masterGain)
+    }).connect(this._masterLimiter)
   }
 
   triggerStrike() {
-    strike.trigger()
+    this._strikes.forEach(strike => {
+      strike.trigger()
+    })
   }
 }
 

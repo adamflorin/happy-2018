@@ -1,13 +1,13 @@
 import Tone from 'tone'
 
-class Strike {
-  constructor() {
+export default class Strike {
+  constructor(index) {
     this._numPartials = 15
 
     this._envelope = this._initEnvelope()
 
     this._oscillator =
-      this._initOscillator()
+      this._initOscillator(index)
       .connect(this._envelope)
       .start()
   }
@@ -29,11 +29,11 @@ class Strike {
     })
   }
 
-  _initOscillator() {
+  _initOscillator(index) {
     return new Tone.Oscillator({
     	partials: this._generatePartials(),
     	type: "custom",
-    	frequency: "C#2",
+    	frequency: index == 0 ? "C#2" : "G#2",
     	volume: -12,
     })
   }
@@ -46,5 +46,3 @@ class Strike {
     return partials
   }
 }
-
-export default new Strike()
