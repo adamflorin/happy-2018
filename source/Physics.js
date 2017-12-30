@@ -1,7 +1,7 @@
 import settings from './settings'
 import {mix, wrapRadians, computeDelta} from './utils'
 
-const numObjects = 1
+const numObjects = 2
 
 class Physics {
   constructor() {

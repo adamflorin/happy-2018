@@ -117,7 +117,7 @@ class World {
           ),
           Object.assign(
             {
-              objectPosition: [0.0, 0.0],
+              objectPosition: physics.getObjectPosition(1),
               scale: settings.objectScale
             },
             moteProps
