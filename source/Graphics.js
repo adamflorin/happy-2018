@@ -114,15 +114,16 @@ class Graphics {
         })
 
         const moteBaseProps = {
-          shadowColor: this._floatColor(settings.shadowColor),
           lightAColor: this._floatColor(settings.lightAColor),
           lightBColor: this._floatColor(settings.lightBColor)
         }
         const moteProps = []
         for (var index = 0; index < this._numObjects; index++) {
+          const moteFloat = index / this._numObjects
           moteProps.push(
             Object.assign(
               {
+                shadowColor: [moteFloat, moteFloat, moteFloat],
                 objectPosition: physics.getObjectPosition(index),
                 scale: settings.objectScale + 0.05 * this._objectStates[index].decay
               },

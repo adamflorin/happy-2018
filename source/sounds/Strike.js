@@ -30,10 +30,19 @@ export default class Strike {
   }
 
   _initOscillator(index) {
+    let frequency
+    switch (index) {
+      case 0:  frequency = "C#3"; break;
+      case 1:  frequency = "D#3"; break;
+      case 2:  frequency = "F3"; break;
+      case 3:  frequency = "G3"; break;
+      case 4:  frequency = "A3"; break;
+      default: frequency = "B3"; break;
+    }
     return new Tone.Oscillator({
     	partials: this._generatePartials(),
     	type: "custom",
-    	frequency: (index == 0 ? "C#2" : (index === 1 ? "G#2" : "B2")),
+    	frequency,
     	volume: -12,
     })
   }

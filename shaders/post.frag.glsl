@@ -27,7 +27,6 @@ precision mediump float;
 // #pragma glslify: blendVividLight = require(glsl-blend/vivid-light)
 
 #pragma glslify: grain = require(glsl-film-grain)
-#pragma glslify: luma = require(glsl-luma)
 
 const float zoom = 2.0;
 
@@ -45,7 +44,5 @@ void main() {
   // vec3 grain = vec3(grain(uv, resolution * zoom, time));
   // vec3 color = blendLinearDodge(texColor, grain);
 
-  float brightness = clamp(pow(luma(texColor) * 1.5, 3.0), 0.0, 1.0);
-
-  gl_FragColor = vec4(vec3(brightness), 1.0);
+  gl_FragColor = vec4(vec3(texColor), 1.0);
 }

@@ -44,7 +44,7 @@ class Physics {
             return
           } else if (receivingObject.stable) {
             receivingObject.forces.wind = {
-              angle: wrapRadians(object.forces.wind.angle + Math.PI),
+              angle: wrapRadians(object.forces.gravity.angle),
               magnitude: settings.initialWindForce
             }
           }
@@ -59,7 +59,10 @@ class Physics {
 
   createObjects(numObjects) {
     for (let index = 0; index < numObjects; index++) {
-      this._objects.push(this._createObject())
+      const object = this._createObject()
+      object.position.x = (index - 1.0) * Math.random()
+      object.position.y = Math.random() * 4.0 - 2.0
+      this._objects.push(object)
     }
   }
 
