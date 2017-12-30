@@ -1,9 +1,9 @@
 import {regl} from './global'
 import settings from './settings'
 import physics from './Physics'
-import seeThroughCamera from './Camera'
-import drawFirmament from './objects/Firmament'
-import drawMote from './objects/Mote'
+import seeThroughCamera from './graphics/Camera'
+import drawFirmament from './graphics/Firmament'
+import drawMote from './graphics/Mote'
 
 const doPostProcess = true
 
