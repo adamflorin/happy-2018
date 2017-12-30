@@ -1,22 +1,22 @@
-import {regl} from './source/global'
+import './source/global'
 import physics from './source/Physics'
 import world from './source/World'
-import {playSound, modulateAmbience} from './source/Audio'
+import audio from './source/Audio'
 
 const objectGravityDistanceThreshold = 0.01
 
 let objectWasStable = true
+
+audio.init()
 
 world.onStep(() => {
   let objectGravityDistance = physics.objectGravityDistance()
   let objectIsStable = (objectGravityDistance < objectGravityDistanceThreshold)
 
   if (objectWasStable && !objectIsStable) {
-    playSound()
+    audio.triggerStrike()
     world.trigger()
   }
-
-  modulateAmbience(objectGravityDistance)
 
   objectWasStable = objectIsStable
 })
