@@ -6,7 +6,7 @@ import drawFirmament from './objects/Firmament'
 import drawGrid from './objects/Grid'
 import drawMote from './objects/Mote'
 
-const doPostProcess = false
+const doPostProcess = true
 
 class World {
   constructor() {
