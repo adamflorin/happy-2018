@@ -1,4 +1,4 @@
-import {regl} from '../global'
+import {regl} from './environment'
 
 export default regl({
   frag: require('../../shaders/sdf.frag.glsl'),

@@ -1,6 +1,6 @@
 import icosphere from 'icosphere'
 import angleNormals from 'angle-normals'
-import {regl} from '../global'
+import {regl} from './environment'
 
 const mesh = icosphere(3)
 const normals = angleNormals(mesh.cells, mesh.positions)

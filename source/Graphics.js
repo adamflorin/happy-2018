@@ -1,4 +1,4 @@
-import {regl} from './global'
+import {regl} from './graphics/environment'
 import settings from './settings'
 import physics from './Physics'
 import seeThroughCamera from './graphics/Camera'

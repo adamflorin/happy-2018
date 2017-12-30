@@ -1,4 +1,4 @@
-import './source/global'
+import './source/graphics/environment'
 import physics from './source/Physics'
 import graphics from './source/Graphics'
 import audio from './source/Audio'

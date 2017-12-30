@@ -1,5 +1,5 @@
 import icosphere from 'icosphere'
-import {regl} from '../global'
+import {regl} from './environment'
 
 const mesh = icosphere(1)
 

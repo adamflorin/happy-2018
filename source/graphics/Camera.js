@@ -1,7 +1,7 @@
 import identity from 'gl-mat4/identity'
 import lookAt from 'gl-mat4/lookAt'
 import perspective from 'gl-mat4/perspective'
-import {regl} from '../global'
+import {regl} from './environment'
 
 let eye = [0.0, 0.0, 3.0]
 let center = [0.0, 0.0, 0.0]
