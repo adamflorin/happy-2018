@@ -13,6 +13,8 @@ uniform vec2 objectPosition;
 varying vec3 surfacePosition, lightPosition;
 varying vec3 vShadowColor, vLightAColor, vLightBColor;
 
+const float reverseLimit = 2.0;
+
 void main() {
   // scale
   surfacePosition = position * scale;
@@ -22,8 +24,8 @@ void main() {
   surfacePosition = rotateX(-objectPosition.y) * surfacePosition;
 
   // translate
-  surfacePosition.x += objectPosition.x;
-  surfacePosition.z -= objectPosition.y;
+  surfacePosition.x += (objectPosition.x * reverseLimit);
+  surfacePosition.z -= (objectPosition.y * reverseLimit);
 
   // light position
   lightPosition = vec3(0.0, 0.0, 1.0);

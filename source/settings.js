@@ -5,11 +5,11 @@ const displayControls = true
 class Settings {
   constructor() {
     // Physics
-    this.gravityInertia = 0.9
+    this.gravityInertia = 0.4
     this.gravityForceNumerator = 0.01
-    this.maxGravityForce = 0.015
+    this.maxGravityForce = 0.01
     this.initialWindForce = 0.05
-    this.windForceDecay = 0.98
+    this.windForceDecay = 0.96
 
     // Object
     this.objectScale = 0.35
