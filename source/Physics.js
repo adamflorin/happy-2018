@@ -58,11 +58,13 @@ class Physics {
   }
 
   createObjects(numObjects) {
-    const limit = 0.5
+    const limit = 1.5
     for (let index = 0; index < numObjects; index++) {
       const object = this._createObject()
-      object.position.x = (index - 1.0) * (Math.random() * limit)
-      object.position.y = (Math.random() * limit) * 4.0 - 2.0
+      const angle = (index / numObjects) * (Math.PI * 2.0)
+
+      object.position.x = Math.cos(angle) * (Math.random() * limit)
+      object.position.y = Math.sin(angle) * (Math.random() * limit)
       this._objects.push(object)
     }
   }
