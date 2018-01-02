@@ -21,6 +21,10 @@ class Audio {
     })
   }
 
+  toggleMute() {
+    Tone.Master.mute = !Tone.Master.mute
+  }
+
   _initMobileSwitch() {
     const onSwitch = document.getElementById('start-audio-mobile')
     StartAudioContext(Tone.context, "#start-audio-mobile", () => {

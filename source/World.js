@@ -26,6 +26,7 @@ class World {
   }
 
   _bindEvents() {
+    // wind
     document.getElementsByTagName('canvas')[0].addEventListener(
       'mousedown',
       event => {
@@ -35,6 +36,13 @@ class World {
         physics.blow(0, angle + Math.PI)
       }
     )
+
+    // mute
+    document.addEventListener('keyup', event => {
+      if (event.key === ' ') {
+        audio.toggleMute()
+      }
+    })
   }
 }
 
