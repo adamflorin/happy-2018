@@ -1,3 +1,4 @@
+import Stats from 'stats-js'
 import graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
@@ -6,6 +7,11 @@ const numObjects = 3
 
 class World {
   constructor() {
+    this._devMode = true
+    if (this._devMode) {
+      this._initStats()
+    }
+
     graphics.setNumObjects(numObjects)
     physics.createObjects(numObjects)
     audio.createStrikes(numObjects)
@@ -22,7 +28,13 @@ class World {
   }
 
   _onFrame() {
+    if (this._devMode) {
+      this._stats.begin()
+    }
     physics.step()
+    if (this._devMode) {
+      this._stats.end()
+    }
   }
 
   _bindEvents() {
@@ -43,6 +55,14 @@ class World {
         audio.toggleMute()
       }
     })
+  }
+
+  _initStats() {
+    this._stats = new Stats()
+    this._stats.domElement.style.position = 'absolute'
+    this._stats.domElement.style.right = '300px'
+    this._stats.domElement.style.top = 0
+    document.body.appendChild(this._stats.domElement)
   }
 }
 
