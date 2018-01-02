@@ -4,6 +4,7 @@ precision mediump float;
 #pragma glslify: rotateX = require(glsl-y-rotate/rotateX)
 
 attribute vec3 position;
+attribute float distortion;
 
 uniform mat4 projection, view;
 uniform float time, scale;
@@ -19,7 +20,7 @@ void main() {
   float distanceToCenter = distance(objectPosition, vec2(0.0));
 
   // scale
-  surfacePosition = position * (scale * (distanceToCenter + 0.4));
+  surfacePosition = position * (scale * (distanceToCenter * distortion + 0.4));
 
   // rotate
   surfacePosition = rotateY(objectPosition.x) * surfacePosition;

@@ -1,14 +1,20 @@
 import icosphere from 'icosphere'
 import {regl} from './environment'
 
-const mesh = icosphere(1)
+const mesh = icosphere(3)
+
+const distortions = []
+mesh.positions.forEach(position => {
+  distortions.push(Math.random())
+})
 
 export default regl({
   frag: require('../../shaders/mote.frag.glsl'),
   vert: require('../../shaders/mote.vert.glsl'),
 
   attributes: {
-    position: mesh.positions
+    position: mesh.positions,
+    distortion: distortions,
   },
   elements: mesh.cells,
 
