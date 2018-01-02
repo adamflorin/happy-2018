@@ -5,6 +5,7 @@ import Strike from './sounds/Strike'
 class Audio {
   constructor() {
     this._strikes = []
+    Tone.Master.mute = true
     this._initMobileSwitch()
   }
 
