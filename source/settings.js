@@ -26,6 +26,7 @@ const settings = new Settings()
 
 if (displayControls) {
   const gui = new dat.GUI()
+  gui.close()
 
   const physicsFolder = gui.addFolder('Physics')
   physicsFolder.add(settings, 'gravityInertia', 0.0, 1.0)
