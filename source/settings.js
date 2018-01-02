@@ -15,10 +15,10 @@ class Settings {
     this.objectScale = 0.35
 
     // Color
-    this.backgroundColor = '#f58888'
-    this.shadowColor = '#f07070'
-    this.lightAColor = '#75000a'
-    this.lightBColor = '#75000a'
+    this.backgroundColor = '#000000'
+    this.shadowColor = '#000000'
+    this.lightAColor = '#ffffff'
+    this.lightBColor = '#000000'
   }
 }
 

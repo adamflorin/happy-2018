@@ -5,7 +5,7 @@ import seeThroughCamera from './graphics/Camera'
 import drawFirmament from './graphics/Firmament'
 import drawMote from './graphics/Mote'
 
-const doPostProcess = true
+const doPostProcess = false
 
 class Graphics {
   constructor() {
@@ -109,8 +109,8 @@ class Graphics {
         })
 
         drawFirmament({
-          zenithColor: [0.6, 0.0, 0.3],
-          horizonColor: [0.4, 0.4, 0.9]
+          zenithColor: [0.1, 0.1, 0.1],
+          horizonColor: [0.5, 0.5, 0.5]
         })
 
         const moteBaseProps = {
