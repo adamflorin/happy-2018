@@ -9,9 +9,10 @@ class Physics {
   }
 
   blow(objectIndex, angle) {
-    let firstObject = this._objects[objectIndex]
-    firstObject.forces.wind.angle = angle
-    firstObject.forces.wind.magnitude = settings.initialWindForce
+    this._objects.forEach(object => {
+      object.forces.wind.angle = angle
+      object.forces.wind.magnitude = settings.initialWindForce
+    })
   }
 
   getObjectPosition(objectIndex) {
