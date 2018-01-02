@@ -16,8 +16,10 @@ varying vec3 vShadowColor, vLightAColor, vLightBColor;
 const float reverseLimit = 2.0;
 
 void main() {
+  float distanceToCenter = distance(objectPosition, vec2(0.0));
+
   // scale
-  surfacePosition = position * scale;
+  surfacePosition = position * (scale * (distanceToCenter + 0.4));
 
   // rotate
   surfacePosition = rotateY(objectPosition.x) * surfacePosition;
