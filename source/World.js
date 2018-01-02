@@ -60,7 +60,7 @@ class World {
   _initStats() {
     this._stats = new Stats()
     this._stats.domElement.style.position = 'absolute'
-    this._stats.domElement.style.right = '300px'
+    this._stats.domElement.style.right = '275px'
     this._stats.domElement.style.top = 0
     document.body.appendChild(this._stats.domElement)
   }
