@@ -2,48 +2,30 @@ import Tone from 'tone'
 
 export default class Strike {
   constructor(index) {
-    this._numPartials = 15
-
-    this._envelope = this._initEnvelope()
-
-    this._oscillator =
-      this._initOscillator(index)
-      .connect(this._envelope)
-      .start()
+    this._index = index
+    this._synth = new Tone.MembraneSynth({
+      pitchDecay: 0.05,
+      octaves: 2,
+      oscillator: {
+        type: 'sine'
+      },
+      volume: -6.0,
+      envelope: {
+        attack: 0.01,
+        decay: 0.4,
+        sustain: 0.1,
+        release: 1.4,
+        attackCurve: 'exponential'
+      }
+    })
   }
 
   trigger() {
-    this._envelope.triggerAttack()
+    let frequency = 110.0 * Math.pow(1.5, this._index)
+    this._synth.triggerAttackRelease(frequency)
   }
 
   connect(node) {
-    this._envelope.connect(node)
-  }
-
-  _initEnvelope() {
-    return new Tone.AmplitudeEnvelope({
-    	attack: 0.05,
-    	decay: 0.9,
-    	sustain: 0.0,
-    	release: 0.0
-    })
-  }
-
-  _initOscillator(index) {
-    let frequency = 110 * Math.pow(1.5, index)
-    return new Tone.Oscillator({
-    	partials: this._generatePartials(),
-    	type: "custom",
-    	frequency,
-    	volume: -3.0,
-    })
-  }
-
-  _generatePartials() {
-    const partials = []
-    for (let index = 0; index < this._numPartials; index++) {
-      partials.push(Math.random())
-    }
-    return partials
+    this._synth.connect(node)
   }
 }
