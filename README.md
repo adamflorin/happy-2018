@@ -7,3 +7,7 @@ Visual expression of form. Turn WebMIDI messages into abstract visuals.
 ### Installation
 
     npm i
+
+### Running
+
+    npm start
