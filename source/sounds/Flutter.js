@@ -5,18 +5,18 @@ export default class Flutter {
     let volume = -24.0
 
     this._oscillator1 = new Tone.Oscillator({
-    	type: 'sine',
+    	type: 'square',
     	frequency: 220.0 * Math.pow(1.5, index),
     	volume,
     })
     this._oscillator2 = new Tone.Oscillator({
-    	type: 'sine',
-    	frequency: 218.0 * Math.pow(1.5, index),
+    	type: 'sawtooth',
+    	frequency: 218.0 * 1.5* Math.pow(1.5, index),
     	volume,
     })
 
     this._filter = new Tone.Filter({
-      frequency: 5000.0,
+      frequency: 10000.0,
       type: 'lowpass',
       rolloff: -48.0
     })
@@ -28,7 +28,7 @@ export default class Flutter {
   }
 
   updateDistance(distance) {
-    distance = Math.pow(distance, 4.0)
+    distance = Math.pow((distance * 1.5), 4.0)
     let value = 100.0 + distance * 4000.0
     this._filter.frequency.value = value
   }

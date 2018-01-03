@@ -59,13 +59,13 @@ class Physics {
   }
 
   createObjects(numObjects) {
-    const limit = 1.5
     for (let index = 0; index < numObjects; index++) {
       const object = this._createObject()
       const angle = (index / numObjects) * (Math.PI * 2.0)
+      const distance = index * (1.0 / numObjects)
 
-      object.position.x = Math.cos(angle) * (Math.random() * limit)
-      object.position.y = Math.sin(angle) * (Math.random() * limit)
+      object.position.x = Math.cos(angle) * distance
+      object.position.y = Math.sin(angle) * distance
       this._objects.push(object)
     }
   }
@@ -76,7 +76,7 @@ class Physics {
         x: 0.0,
         y: 0.0
       },
-      stable: true,
+      stable: false,
       lastDelta: {
         x: 0.0,
         y: 0.0

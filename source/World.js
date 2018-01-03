@@ -3,7 +3,7 @@ import graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
 
-const numObjects = 3
+const numObjects = 7
 
 class World {
   constructor() {

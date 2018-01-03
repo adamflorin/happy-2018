@@ -53,7 +53,7 @@ class Audio {
     }).toMaster()
 
     this._reverb = new Tone.JCReverb({
-      roomSize: 0.05
+      roomSize: 0.6
     }).connect(this._masterLimiter)
 
     this._compressor = new Tone.Compressor({
