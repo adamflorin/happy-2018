@@ -66,7 +66,7 @@ class Audio {
 
     this._masterGain = new Tone.Gain({
       gain: 0.15
-    }).connect(this._reverb)
+    }).connect(this._compressor)
   }
 }
 
