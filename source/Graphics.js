@@ -7,7 +7,7 @@ import drawMote from './graphics/Mote'
 
 const doPostProcess = false
 
-class Graphics {
+export default class Graphics {
   constructor() {
     this._objectStates = []
 
@@ -144,5 +144,3 @@ class Graphics {
     return intColor.map(value => value / 255.0)
   }
 }
-
-export default new Graphics()

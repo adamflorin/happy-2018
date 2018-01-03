@@ -1,34 +1,53 @@
 import Stats from 'stats-js'
-import graphics from './Graphics'
+import Graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
 
+const devMode = true
+const renderGraphics = false
 const numObjects = 7
+
+let graphics
+
+if (renderGraphics) {
+  graphics = new Graphics()
+}
 
 class World {
   constructor() {
-    this._devMode = true
-    if (this._devMode) {
+    if (devMode) {
       this._initStats()
     }
 
-    graphics.setNumObjects(numObjects)
+    if (renderGraphics) {
+      graphics.setNumObjects(numObjects)
+    }
     physics.createObjects(numObjects)
     audio.createSounds(numObjects)
     audio.init()
 
-    graphics.onFrame(() => this._onFrame())
+    if (renderGraphics) {
+      graphics.onFrame(() => this._onFrame())
+    } else {
+      requestAnimationFrame(() => this._onFrame())
+    }
 
     physics.onObjectStrike(objectIndex => {
       audio.triggerStrike(objectIndex)
-      graphics.trigger(objectIndex)
+      if (renderGraphics) {
+        graphics.trigger(objectIndex)
+      }
     })
 
     this._bindEvents()
   }
 
   _onFrame() {
-    if (this._devMode) {
+    if (!renderGraphics) {
+      requestAnimationFrame(() => this._onFrame())
+    }
+
+    if (devMode) {
       this._stats.begin()
     }
 
@@ -39,22 +58,24 @@ class World {
       audio.updateDistance(index, distance)
     }
 
-    if (this._devMode) {
+    if (devMode) {
       this._stats.end()
     }
   }
 
   _bindEvents() {
     // wind
-    document.getElementsByTagName('canvas')[0].addEventListener(
-      'mousedown',
-      event => {
-        const x = (event.x / window.innerWidth - 0.5) * 2.0
-        const y = (event.y / window.innerHeight - 0.5) * 2.0
-        const angle = Math.atan2(-y, x)
-        physics.blow(0, angle + Math.PI)
-      }
-    )
+    if (renderGraphics) {
+      document.getElementsByTagName('canvas')[0].addEventListener(
+        'mousedown',
+        event => {
+          const x = (event.x / window.innerWidth - 0.5) * 2.0
+          const y = (event.y / window.innerHeight - 0.5) * 2.0
+          const angle = Math.atan2(-y, x)
+          physics.blow(0, angle + Math.PI)
+        }
+      )
+    }
 
     // mute
     document.addEventListener('keyup', event => {
