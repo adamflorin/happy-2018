@@ -12,9 +12,9 @@ export default class Strike {
       volume: -6.0,
       envelope: {
         attack: 0.01,
-        decay: 0.4,
-        sustain: 0.1,
-        release: 1.4,
+        decay: 0.2,
+        sustain: 0.0,
+        // release: 0.05, // dontcare
         attackCurve: 'exponential'
       }
     })
