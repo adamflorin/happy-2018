@@ -49,7 +49,7 @@ class Audio {
 
   _initMixer() {
     this._masterLimiter = new Tone.Limiter({
-      threshold: -0.3
+      threshold: -3.0
     }).toMaster()
 
     this._reverb = new Tone.JCReverb({
