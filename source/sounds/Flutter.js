@@ -3,25 +3,29 @@ import Tone from 'tone'
 export default class Flutter {
   constructor(index) {
     this._oscillator = new Tone.Oscillator({
-    	type: "sine",
-    	frequency: 220 * Math.pow(2.0, Math.random() * 2.0),
-    	volume: -12.0,
+    	type: 'sawtooth',
+    	frequency: 220 * Math.pow(1.5, index),
+    	volume: -24.0,
     })
+
+    this._filter = new Tone.Filter({
+      frequency: 5000.0,
+      type: 'lowpass',
+      rolloff: -48.0
+    })
+
+    this._oscillator.connect(this._filter)
+
     this._oscillator.start()
   }
 
   updateDistance(distance) {
-    if (this._oscillator === undefined) {
-      return
-    }
-    let value = -48.0 + 24.0 * distance
-    this._oscillator.volume.value = value
+    distance = Math.pow(distance, 1.5)
+    let value = 50.0 + distance * 8000.0
+    this._filter.frequency.value = value
   }
 
   connect(node) {
-    if (this._oscillator === undefined) {
-      return
-    }
-    this._oscillator.connect(node)
+    this._filter.connect(node)
   }
 }
