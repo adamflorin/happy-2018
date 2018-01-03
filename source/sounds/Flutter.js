@@ -1,5 +1,7 @@
 import Tone from 'tone'
 
+const rampDuration = 1.0 / 60.0
+
 export default class Flutter {
   constructor(index) {
     let volume = -24.0
@@ -30,7 +32,8 @@ export default class Flutter {
   updateDistance(distance) {
     distance = Math.pow((distance * 1.5), 4.0)
     let value = 100.0 + distance * 4000.0
-    this._filter.frequency.value = value
+    this._filter.frequency.cancelScheduledValues()
+    this._filter.frequency.linearRampToValueAtTime(value, Tone.context.now() + rampDuration)
   }
 
   connect(node) {
