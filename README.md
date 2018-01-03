@@ -1,13 +1,19 @@
-# vys-ex
+# 2018
 
-Visual expression of form. Turn WebMIDI messages into abstract visuals.
+Simple graphics & audio synthesis greeting card built with
+[regl](http://regl.party/) and [Tone.js](https://tonejs.github.io/).
 
-## Development
+## Scripts
 
 ### Installation
 
     npm i
+    npm i -g webpack-dev-server
 
-### Running
+### Running (development)
 
     npm start
+
+### Building (production)
+
+    npm run-script build
