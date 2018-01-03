@@ -29,7 +29,7 @@ export default class Flutter {
 
   updateDistance(distance) {
     distance = Math.pow(distance, 4.0)
-    let value = 0.0 + distance * 8000.0
+    let value = 100.0 + distance * 4000.0
     this._filter.frequency.value = value
   }
 
