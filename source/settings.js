@@ -12,7 +12,7 @@ class Settings {
     this.windForceDecay = 0.96
 
     // Object
-    this.objectScale = 0.8
+    this.objectScale = 1.5
 
     // Color
     this.backgroundColor = '#000000'
@@ -37,7 +37,7 @@ if (displayControls) {
   physicsFolder.open()
 
   const objectFolder = gui.addFolder('Object')
-  objectFolder.add(settings, 'objectScale', 0.0, 1.0)
+  objectFolder.add(settings, 'objectScale', 0.0, 5.0)
 
   const colorFolder = gui.addFolder('Color')
   colorFolder.addColor(settings, 'backgroundColor')

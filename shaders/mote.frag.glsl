@@ -2,6 +2,7 @@
 
 precision mediump float;
 
+varying float vDistanceToCenter;
 varying vec3 surfacePosition, lightPosition;
 varying vec3 vShadowColor, vLightAColor, vLightBColor;
 
@@ -20,7 +21,7 @@ void main() {
   vec3 color = mix(vShadowColor, vLightAColor, vec3(value1, value1, value1));
   color = mix(color, vLightBColor, vec3(value2, value2, value2));
 
-  gl_FragColor = vec4(color, 0.5);
+  gl_FragColor = vec4(color, vDistanceToCenter * 0.8);
 }
 
 float lambert(vec3 lightPosition, vec3 normal) {

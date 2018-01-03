@@ -11,16 +11,17 @@ uniform float time, scale;
 uniform vec3 shadowColor, lightAColor, lightBColor;
 uniform vec2 objectPosition;
 
+varying float vDistanceToCenter;
 varying vec3 surfacePosition, lightPosition;
 varying vec3 vShadowColor, vLightAColor, vLightBColor;
 
 const float reverseLimit = 2.0;
 
 void main() {
-  float distanceToCenter = distance(objectPosition, vec2(0.0));
+  vDistanceToCenter = distance(objectPosition, vec2(0.0));
 
   // scale
-  surfacePosition = position * (scale * (distanceToCenter * distortion + 0.4));
+  surfacePosition = position * (scale * (vDistanceToCenter * distortion + 0.0));
 
   // rotate
   surfacePosition = rotateY(objectPosition.x) * surfacePosition;
