@@ -14,7 +14,7 @@ class World {
 
     graphics.setNumObjects(numObjects)
     physics.createObjects(numObjects)
-    audio.createStrikes(numObjects)
+    audio.createSounds(numObjects)
     audio.init()
 
     graphics.onFrame(() => this._onFrame())
@@ -31,7 +31,14 @@ class World {
     if (this._devMode) {
       this._stats.begin()
     }
+
     physics.step()
+
+    for (let index = 0; index < numObjects; index++) {
+      let distance = physics.getObjectGravityDistance(index)
+      audio.updateDistance(index, distance)
+    }
+
     if (this._devMode) {
       this._stats.end()
     }
