@@ -4,8 +4,8 @@ import audio from './Audio'
 import physics from './Physics'
 
 const devMode = true
-const renderGraphics = false
-const numObjects = 7
+const renderGraphics = true
+const numObjects = 6
 
 let graphics
 

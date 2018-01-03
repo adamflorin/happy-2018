@@ -1,7 +1,9 @@
 import Tone from 'tone'
 import StartAudioContext from 'startaudiocontext'
-import Strike from './sounds/Strike'
+import {strikeSynth, Strike} from './sounds/Strike'
 import Flutter from './sounds/Flutter'
+
+Tone.Context.latencyHint = 'playback'
 
 class Audio {
   constructor() {
@@ -20,9 +22,7 @@ class Audio {
 
   init() {
     this._initMixer()
-    this._strikes.forEach(strike => {
-      strike.connect(this._masterGain)
-    })
+    strikeSynth.connect(this._masterGain)
     this._flutters.forEach(flutter => {
       flutter.connect(this._masterGain)
     })
@@ -52,21 +52,21 @@ class Audio {
       threshold: -3.0
     }).toMaster()
 
-    this._reverb = new Tone.JCReverb({
-      roomSize: 0.6
-    }).connect(this._masterLimiter)
+    // this._reverb = new Tone.JCReverb({
+    //   roomSize: 0.4
+    // }).connect(this._masterLimiter)
 
-    this._compressor = new Tone.Compressor({
-      ratio: 12.0,
-      threshold: -12.0,
-      attack: 0.003,
-      release: 0.25,
-      knee: 30.0
-    }).connect(this._reverb)
+    // this._compressor = new Tone.Compressor({
+    //   ratio: 12.0,
+    //   threshold: -12.0,
+    //   attack: 0.003,
+    //   release: 0.25,
+    //   knee: 30.0
+    // }).connect(this._masterLimiter)
 
     this._masterGain = new Tone.Gain({
-      gain: 0.15
-    }).connect(this._compressor)
+      gain: 0.1
+    }).connect(this._masterLimiter)
   }
 }
 
