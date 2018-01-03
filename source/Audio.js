@@ -49,12 +49,24 @@ class Audio {
 
   _initMixer() {
     this._masterLimiter = new Tone.Limiter({
-      threshold: -6.0
+      threshold: -0.3
     }).toMaster()
 
-    this._masterGain = new Tone.Gain({
-      gain: 1.1
+    this._reverb = new Tone.JCReverb({
+      roomSize: 0.05
     }).connect(this._masterLimiter)
+
+    this._compressor = new Tone.Compressor({
+      ratio: 12.0,
+      threshold: -12.0,
+      attack: 0.003,
+      release: 0.25,
+      knee: 30.0
+    }).connect(this._reverb)
+
+    this._masterGain = new Tone.Gain({
+      gain: 0.15
+    }).connect(this._reverb)
   }
 }
 
