@@ -123,7 +123,7 @@ export default class Graphics {
           moteProps.push(
             Object.assign(
               {
-                shadowColor: [moteFloat, moteFloat, moteFloat],
+                hue: moteFloat,
                 objectPosition: physics.getObjectPosition(index),
                 scale: settings.objectScale + 0.05 * this._objectStates[index].decay
               },

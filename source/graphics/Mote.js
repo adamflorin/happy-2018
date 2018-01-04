@@ -1,7 +1,7 @@
 import icosphere from 'icosphere'
 import {regl} from './environment'
 
-const mesh = icosphere(3)
+const mesh = icosphere(1)
 
 const distortions = []
 mesh.positions.forEach(position => {
@@ -20,7 +20,7 @@ export default regl({
 
   uniforms: {
     time: regl.context('time'),
-    shadowColor: regl.prop('shadowColor'),
+    hue: regl.prop('hue'),
     lightAColor: regl.prop('lightAColor'),
     lightBColor: regl.prop('lightBColor'),
     objectPosition: regl.prop('objectPosition'),

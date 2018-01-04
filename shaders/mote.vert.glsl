@@ -7,11 +7,11 @@ attribute vec3 position;
 attribute float distortion;
 
 uniform mat4 projection, view;
-uniform float time, scale;
-uniform vec3 shadowColor, lightAColor, lightBColor;
+uniform float time, scale, hue;
+uniform vec3 lightAColor, lightBColor;
 uniform vec2 objectPosition;
 
-varying float vDistanceToCenter;
+varying float vDistanceToCenter, vHue;
 varying vec3 surfacePosition, lightPosition;
 varying vec3 vShadowColor, vLightAColor, vLightBColor;
 
@@ -21,7 +21,10 @@ void main() {
   vDistanceToCenter = distance(objectPosition, vec2(0.0));
 
   // scale
-  surfacePosition = position * (scale * (vDistanceToCenter * distortion + 0.0));
+  surfacePosition = position * scale;
+
+  // distort
+  surfacePosition += vec3(distortion * vDistanceToCenter);
 
   // rotate
   surfacePosition = rotateY(objectPosition.x) * surfacePosition;
@@ -35,7 +38,7 @@ void main() {
   lightPosition = vec3(0.0, 0.0, 1.0);
 
   // pass light colors through
-  vShadowColor = shadowColor;
+  vHue = hue;
   vLightAColor = lightAColor;
   vLightBColor = lightBColor;
 

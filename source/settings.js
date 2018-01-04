@@ -12,7 +12,7 @@ class Settings {
     this.windForceDecay = 0.96
 
     // Object
-    this.objectScale = 1.5
+    this.objectScale = 0.5
 
     // Color
     this.backgroundColor = '#000000'
