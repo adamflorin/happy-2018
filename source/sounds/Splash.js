@@ -9,20 +9,46 @@ export default class Splash {
 
     this.output = new Tone.Volume(0.0)
 
-    this.softEnvelope = new Tone.Volume(defaultVolume).connect(this.output)
-
-    this.triggerGain = new Tone.Gain(0.2).connect(this.output)
-    this.triggerEnvelope = new Tone.Envelope().connect(this.triggerGain.gain)
+    this._createSoftChain()
+    this._createTriggerChain()
 
     this.source = this._createSource()
     this.source.fan(this.triggerGain, this.softEnvelope)
   }
 
+  _createTriggerChain() {
+    this.triggerFilter = new Tone.Filter({
+      frequency: 500,
+      type: 'lowpass',
+      Q: 5.0,
+      gain: 2.0
+    }).connect(this.output)
+
+    this.triggerGain = new Tone.Gain(0.2).connect(this.triggerFilter)
+
+    this.triggerEnvelope = new Tone.Envelope().connect(this.triggerGain.gain)
+  }
+
+  _createSoftChain() {
+    this.softFilter = new Tone.Filter({
+      frequency: 5000,
+      type: 'bandpass',
+      Q: 1.0,
+      gain: 0.8
+    }).connect(this.output)
+
+    this.softEnvelope = new Tone.Volume(defaultVolume).connect(this.softFilter)
+  }
+
   _createSource() {
-    return new Tone.Oscillator({
-      type: 'sawtooth4',
-      frequency: this.frequency
-    }).start()
+    const source = new Tone.Gain()
+
+    new Tone.Oscillator({
+      type: 'sawtooth',
+      frequency: this.frequency * 0.99
+    }).connect(source).start()
+
+    return source
   }
 
   connect(node) {
