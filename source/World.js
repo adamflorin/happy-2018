@@ -5,7 +5,7 @@ import physics from './Physics'
 
 const devMode = true
 const renderGraphics = true
-const numObjects = 2
+const numObjects = 5
 
 let graphics
 

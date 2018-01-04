@@ -79,6 +79,8 @@ export default class Splash {
   }
 
   _getBaseFrequency(index) {
-    return 110.0 * Math.pow(1.5, index)
+    let factor = Math.pow(1.5, index)
+    factor = 1.0 + (factor % 1.0)
+    return 110.0 * factor
   }
 }
