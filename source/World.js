@@ -52,11 +52,7 @@ class World {
     }
 
     physics.step()
-
-    for (let index = 0; index < numObjects; index++) {
-      let distance = physics.getObjectGravityDistance(index)
-      audio.updateDistance(index, distance)
-    }
+    audio.updateObjects()
 
     if (devMode) {
       this._stats.end()

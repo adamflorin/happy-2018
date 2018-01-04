@@ -15,6 +15,10 @@ class Physics {
     })
   }
 
+  getObject(objectIndex) {
+    return this._objects[objectIndex]
+  }
+
   getObjectPosition(objectIndex) {
     let object = this._objects[objectIndex]
     return [object.position.x, object.position.y]

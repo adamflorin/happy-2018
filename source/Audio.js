@@ -1,31 +1,26 @@
 import Tone from 'tone'
 import StartAudioContext from 'startaudiocontext'
-import {strikeSynth, Strike} from './sounds/Strike'
-import Flutter from './sounds/Flutter'
+import physics from './Physics'
+import Splash from './sounds/Splash'
 
-Tone.Context.latencyHint = 'playback'
+// Tone.Context.latencyHint = 'playback'
 
 class Audio {
   constructor() {
-    this._strikes = []
-    this._flutters = []
+    this._splashes = []
     // Tone.Master.mute = true
     this._initMobileSwitch()
   }
 
   createSounds(numStrikes) {
     for (var index = 0; index < numStrikes; index++) {
-      this._strikes.push(new Strike(index))
-      this._flutters.push(new Flutter(index))
+      this._splashes.push(new Splash(index))
     }
   }
 
   init() {
     this._initMixer()
-    strikeSynth.connect(this._masterGain)
-    this._flutters.forEach(flutter => {
-      flutter.connect(this._masterGain)
-    })
+    this._splashes.forEach(splash => splash.connect(this.master))
   }
 
   toggleMute() {
@@ -33,11 +28,13 @@ class Audio {
   }
 
   triggerStrike(objectIndex) {
-    this._strikes[objectIndex].trigger()
+    this._splashes[objectIndex].trigger()
   }
 
-  updateDistance(objectIndex, distance) {
-    this._flutters[objectIndex].updateDistance(distance)
+  updateObjects() {
+    this._splashes.forEach((splash, index) => {
+      splash.updateObject(physics.getObject(index))
+    })
   }
 
   _initMobileSwitch() {
@@ -48,25 +45,11 @@ class Audio {
   }
 
   _initMixer() {
-    this._masterLimiter = new Tone.Limiter({
-      threshold: -3.0
-    }).toMaster()
+    this.output = new Tone.Volume(-6.0).toMaster()
 
-    // this._reverb = new Tone.JCReverb({
-    //   roomSize: 0.4
-    // }).connect(this._masterLimiter)
-
-    // this._compressor = new Tone.Compressor({
-    //   ratio: 12.0,
-    //   threshold: -12.0,
-    //   attack: 0.003,
-    //   release: 0.25,
-    //   knee: 30.0
-    // }).connect(this._masterLimiter)
-
-    this._masterGain = new Tone.Gain({
-      gain: 0.1
-    }).connect(this._masterLimiter)
+    this.master = new Tone.Limiter({
+      threshold: -0.3
+    }).connect(this.output)
   }
 }
 
