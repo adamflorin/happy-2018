@@ -47,9 +47,14 @@ class Audio {
   _initMixer() {
     this.output = new Tone.Volume(-6.0).toMaster()
 
+    this.reverb = new Tone.Freeverb({
+      roomSize: 0.2,
+      dampening: 12000
+    }).connect(this.output)
+
     this.master = new Tone.Limiter({
       threshold: -0.3
-    }).connect(this.output)
+    }).connect(this.reverb)
   }
 }
 
