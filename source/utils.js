@@ -17,8 +17,30 @@ function computeDelta(force) {
   }
 }
 
+function normalize(vector) {
+  if (vector.x === 0.0 && vector.y === 0.0) {
+    return {x: 0.0, y: 0.0}
+  }
+  const vectorMagnitude = magnitude(vector)
+  return {
+    x: vector.x / vectorMagnitude,
+    y: vector.y / vectorMagnitude
+  }
+}
+
+function magnitude(vector) {
+  return Math.sqrt(vector.x * vector.x + vector.y * vector.y)
+}
+
+function dot(vectorA, vectorB) {
+  return vectorA.x * vectorB.x + vectorA.y * vectorB.y
+}
+
 module.exports = {
   mix,
   wrapRadians,
-  computeDelta
+  computeDelta,
+  normalize,
+  magnitude,
+  dot
 }

@@ -1,4 +1,5 @@
 import Tone from 'tone'
+import {normalize, magnitude, dot} from '../utils'
 
 const defaultVolume = -12.0
 
@@ -13,10 +14,15 @@ export default class Splash {
     this.triggerGain = new Tone.Gain(0.2).connect(this.output)
     this.triggerEnvelope = new Tone.Envelope().connect(this.triggerGain.gain)
 
-    new Tone.Oscillator({
+    this.source = this._createSource()
+    this.source.fan(this.triggerGain, this.softEnvelope)
+  }
+
+  _createSource() {
+    return new Tone.Oscillator({
       type: 'sawtooth4',
       frequency: this.frequency
-    }).fan(this.triggerGain, this.softEnvelope).start()
+    }).start()
   }
 
   connect(node) {
@@ -24,9 +30,21 @@ export default class Splash {
   }
 
   updateObject(object) {
-    let {position, lastDelta} = object
-    const distance = Math.sqrt(position.x * position.x + position.y * position.y)
-    const volume = -12.0 - 96.0 * distance
+    let volume = -96.0
+    const {position, lastDelta} = object
+
+    const positionMagnitude = magnitude(position)
+    const velocityMagnitude = magnitude(lastDelta)
+
+    if (velocityMagnitude > 0.01) {
+      const dotProduct = dot(normalize(position), normalize(lastDelta))
+      const movingAway = (dotProduct > 0.0)
+      if (movingAway) {
+        volume += 48.0 + (2.0 * positionMagnitude) * 48.0
+        volume = Math.min(0.0, volume)
+      }
+    }
+
     this.softEnvelope.volume.value = volume
   }
 
