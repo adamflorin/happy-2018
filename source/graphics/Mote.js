@@ -1,6 +1,6 @@
 import icosphere from 'icosphere'
 import {regl} from './environment'
-import settings from '../settings'
+import {settings} from '../settings'
 import {floatColor} from '../utils'
 
 export default class Mote {

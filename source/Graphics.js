@@ -1,5 +1,5 @@
 import {regl} from './graphics/environment'
-import settings from './settings'
+import {settings} from './settings'
 import physics from './Physics'
 import {seeThroughCamera} from './graphics/Camera'
 import drawFirmament from './graphics/Firmament'

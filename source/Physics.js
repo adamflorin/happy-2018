@@ -1,4 +1,4 @@
-import settings from './settings'
+import {settings} from './settings'
 import {mix, wrapRadians, computeDelta, magnitude} from './utils'
 
 const objectGravityDistanceThreshold = 0.01

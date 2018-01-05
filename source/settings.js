@@ -1,7 +1,5 @@
 import dat from 'dat-gui'
 
-const displayControls = true
-
 class Settings {
   constructor() {
     // Physics
@@ -26,7 +24,7 @@ class Settings {
 
 const settings = new Settings()
 
-if (displayControls) {
+function displayControls() {
   const gui = new dat.GUI()
   gui.close()
 
@@ -50,4 +48,7 @@ if (displayControls) {
   colorFolder.addColor(settings, 'lightBColor')
 }
 
-export default settings
+module.exports = {
+  settings,
+  displayControls
+}

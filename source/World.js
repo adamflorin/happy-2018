@@ -6,8 +6,9 @@ import {viewMatrix, projectionMatrix, eye} from './graphics/Camera'
 import Graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
+import {displayControls} from './settings'
 
-const devMode = true
+const displayDevControls = false
 const renderGraphics = true
 const numObjects = 3
 
@@ -19,8 +20,9 @@ if (renderGraphics) {
 
 class World {
   constructor() {
-    if (devMode) {
+    if (displayDevControls) {
       this._initStats()
+      displayControls()
     }
 
     if (renderGraphics) {
@@ -51,14 +53,14 @@ class World {
       requestAnimationFrame(() => this._onFrame())
     }
 
-    if (devMode) {
+    if (displayDevControls) {
       this._stats.begin()
     }
 
     physics.step()
     audio.updateObjects()
 
-    if (devMode) {
+    if (displayDevControls) {
       this._stats.end()
     }
   }
