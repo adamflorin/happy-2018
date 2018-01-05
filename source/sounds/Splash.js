@@ -9,8 +9,8 @@ export default class Splash {
 
     this.pannedOutput = new Tone.Panner()
 
-    const prepanOutput = new Tone.Volume(-6.0).connect(this.pannedOutput)
-    const softChainInput = this._createSoftChain(prepanOutput)
+    const prepanOutput = new Tone.Volume(0.0).connect(this.pannedOutput)
+    const softChainInput = this._createSoftChain(this.pannedOutput)
     const triggerChainInput = this._createTriggerChain(prepanOutput)
 
     const source = this._createSource()
@@ -46,21 +46,25 @@ export default class Splash {
   }
 
   trigger() {
-    this.triggerEnvelope.triggerAttackRelease(0.05)
+    this.triggerEnvelope.triggerAttackRelease(0.08)
   }
 
   _createTriggerChain(output) {
     const triggerFilter = new Tone.Filter({
       frequency: 500,
       type: 'lowpass',
-      Q: 5.0,
-      gain: 2.0
+      Q: 0.01
     }).connect(output)
 
-    const triggerGain = new Tone.Gain(0.2).connect(triggerFilter)
+    const triggerVolume = new Tone.Volume(6.0).connect(triggerFilter)
+
+    const triggerGain = new Tone.Gain(0.0).connect(triggerVolume)
 
     this.triggerEnvelope = new Tone.Envelope({
-      attack: 0.1
+      attack: 0.1,
+      decay: 0.1,
+      sustain: 0.9,
+      release: 0.9
     }).connect(triggerGain.gain)
 
     return triggerGain
@@ -108,8 +112,7 @@ export default class Splash {
 
     var carrier = new Tone.Oscillator({
       type: 'sine',
-      frequency: this.frequency,
-      volume: 6.0
+      frequency: this.frequency
     }).start()
 
     var modulator = new Tone.Oscillator({

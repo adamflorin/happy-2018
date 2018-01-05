@@ -45,16 +45,24 @@ class Audio {
   }
 
   _initMixer() {
-    this.output = new Tone.Volume(-6.0).toMaster()
+    this.output = new Tone.Volume(0.0).toMaster()
 
-    this.reverb = new Tone.Freeverb({
+    const reverb = new Tone.Freeverb({
       roomSize: 0.2,
       dampening: 12000
     }).connect(this.output)
 
-    this.master = new Tone.Limiter({
+    const limiter = new Tone.Limiter({
       threshold: -0.3
-    }).connect(this.reverb)
+    }).connect(reverb)
+
+    this.master = new Tone.Compressor({
+      ratio: 12,
+      threshold: -24,
+      release: 0.25,
+      attack: 0.003,
+      knee: 30
+    }).connect(limiter)
   }
 }
 
