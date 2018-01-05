@@ -13,7 +13,7 @@ class Physics {
     let shortestDistance = 9999.0
     this._objects.forEach((object, index) => {
       if (object.stable) {
-        return
+        // return
       }
       let vector = {
         x: position.x - object.position.x,
