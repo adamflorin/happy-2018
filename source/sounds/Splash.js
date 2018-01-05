@@ -7,7 +7,9 @@ export default class Splash {
 
     this.frequency = this._getBaseFrequency(index)
 
-    this.output = new Tone.Volume(-6.0)
+    this.pannedOutput = new Tone.Panner()
+
+    this.output = new Tone.Volume(-6.0).connect(this.pannedOutput)
 
     this._createSoftChain()
     this._createTriggerChain()
@@ -90,7 +92,7 @@ export default class Splash {
   }
 
   connect(node) {
-    this.output.connect(node)
+    this.pannedOutput.connect(node)
   }
 
   updateObject(object) {
@@ -110,6 +112,11 @@ export default class Splash {
     }
 
     this.softVolume.volume.value = volume
+
+    let pan = position.x
+    pan *= 2.0
+    pan = Math.min(1.0, Math.max(-1.0, pan))
+    this.pannedOutput.pan.value = pan
   }
 
   trigger() {
