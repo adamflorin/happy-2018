@@ -27,7 +27,7 @@ class Physics {
     })
     let windObject = this._objects[nearestIndex]
     let windAngle = Math.atan2(
-      -(windObject.position.y - position.y),
+      windObject.position.y - position.y,
       windObject.position.x - position.x
     )
     windObject.forces.wind.angle = windAngle

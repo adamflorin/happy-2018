@@ -9,7 +9,7 @@ import physics from './Physics'
 
 const devMode = true
 const renderGraphics = true
-const numObjects = 2
+const numObjects = 3
 
 let graphics
 
@@ -103,7 +103,7 @@ class World {
     let slopeX = deltaX / deltaY
     let realX = eye[0] - eye[1] * slopeX
 
-    return {x: realX, y: realZ}
+    return {x: realX, y: -realZ}
   }
 
   _initStats() {
