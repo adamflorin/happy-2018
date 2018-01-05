@@ -4,6 +4,7 @@ import physics from './Physics'
 import {seeThroughCamera} from './graphics/Camera'
 import drawFirmament from './graphics/Firmament'
 import Mote from './graphics/Mote'
+import {floatColor} from './utils'
 
 const doPostProcess = false
 
@@ -55,8 +56,8 @@ export default class Graphics {
     }
   }
 
-  onFrame(callback) {
-    this._stepCallback = callback
+  beforeFrame(callback) {
+    this._beforeFrameCallback = callback
   }
 
   trigger(objectIndex) {
@@ -64,8 +65,8 @@ export default class Graphics {
   }
 
   _onFrame({viewportWidth, viewportHeight}) {
-    if (this._stepCallback) {
-      this._stepCallback()
+    if (this._beforeFrameCallback) {
+      this._beforeFrameCallback()
     }
 
     this._fbo.resize(viewportWidth, viewportHeight)
@@ -79,48 +80,21 @@ export default class Graphics {
   }
 
   _drawScene() {
-    let eye = [0.0, 0.5, 3.0]
-    let center = [0.0, 0.0, 0.0]
-    let up = [0.0, 1.0, 0.0]
-
     seeThroughCamera(
-      {eye, center, up},
+      {},
       () => {
         regl.clear({
-          color: this._floatColor(settings.backgroundColor).concat([1.0]),
+          color: floatColor(settings.backgroundColor).concat([1.0]),
           depth: 1
         })
 
         drawFirmament()
 
-        const moteBaseProps = {
-          lightAColor: this._floatColor(settings.lightAColor),
-          lightBColor: this._floatColor(settings.lightBColor)
-        }
         this._motes.forEach((mote, moteIndex) => {
-          const moteProps = []
-          const moteFloat = moteIndex / this._numObjects
-          moteProps.push(
-            Object.assign(
-              {
-                hue: moteFloat,
-                objectPosition: physics.getObjectPosition(moteIndex),
-                scale: settings.objectScale + 0.05 * mote.getDecay()
-              },
-              moteBaseProps
-            )
-          )
-          mote.draw(moteProps)
+          const objectPosition = physics.getObjectPosition(moteIndex)
+          mote.draw(objectPosition, moteIndex / this._numObjects)
         })
       }
     )
-  }
-
-  _floatColor(intColor) {
-    if (typeof intColor === 'string') {
-      const matches = intColor.match(/#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/)
-      intColor = matches.slice(1, 4).map(string => parseInt(string, 16))
-    }
-    return intColor.map(value => value / 255.0)
   }
 }

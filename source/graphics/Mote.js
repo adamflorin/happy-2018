@@ -1,5 +1,7 @@
 import icosphere from 'icosphere'
 import {regl} from './environment'
+import settings from '../settings'
+import {floatColor} from '../utils'
 
 export default class Mote {
   constructor() {
@@ -16,8 +18,26 @@ export default class Mote {
     this._initDraw()
   }
 
+  draw(objectPosition, moteFloat) {
+    const moteBaseProps = {
+      lightAColor: floatColor(settings.lightAColor),
+      lightBColor: floatColor(settings.lightBColor)
+    }
+
+    this._render(
+      Object.assign(
+        {
+          hue: moteFloat,
+          objectPosition,
+          scale: settings.objectScale + 0.05 * this._decay
+        },
+        moteBaseProps
+      )
+    )
+  }
+
   _initDraw() {
-    this.draw = regl({
+    this._render = regl({
       frag: require('../../shaders/mote.frag.glsl'),
       vert: require('../../shaders/mote.vert.glsl'),
 
@@ -60,9 +80,5 @@ export default class Mote {
       },
       1000.0 / 60.0
     )
-  }
-
-  getDecay() {
-    return this._decay
   }
 }

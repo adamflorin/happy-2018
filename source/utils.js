@@ -1,3 +1,11 @@
+function floatColor(intColor) {
+  if (typeof intColor === 'string') {
+    const matches = intColor.match(/#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/)
+    intColor = matches.slice(1, 4).map(string => parseInt(string, 16))
+  }
+  return intColor.map(value => value / 255.0)
+}
+
 function mix(from, to, mix) {
   return (from * mix) + (1.0 - mix) * to
 }
@@ -37,6 +45,7 @@ function dot(vectorA, vectorB) {
 }
 
 module.exports = {
+  floatColor,
   mix,
   wrapRadians,
   computeDelta,

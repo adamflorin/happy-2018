@@ -31,7 +31,7 @@ class World {
     audio.init()
 
     if (renderGraphics) {
-      graphics.onFrame(() => this._onFrame())
+      graphics.beforeFrame(() => this._onFrame())
     } else {
       requestAnimationFrame(() => this._onFrame())
     }
