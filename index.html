@@ -4,7 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>VysEx</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet">
     <style media="screen">
+      body {
+        font-family: 'Open Sans Condensed', sans-serif;
+        font-size: 16px;
+      }
       a#start-audio-mobile {
         display: block;
         position: absolute;
@@ -12,14 +17,30 @@
         left: 0;
         right: 0;
         height: 1em;
-        font-size: 80px;
-        background-color: red;
+        font-size: 300%;
+        background-color: rgba(0.6, 0.0, 0.0, 0.2);
+        text-align: center;
+        color: white;
         z-index: 1;
+      }
+      #greeting {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        text-align: center;
+        line-height: 1em;
+        font-size: 900%;
+        color: white;
+        z-index: 1;
+        pointer-events: none;
       }
     </style>
   </head>
   <body>
-    <a id="start-audio-mobile">hit it</a>
+    <a id="start-audio-mobile">Play Sound</a>
+    <div id="greeting">HAPPY NEW YEAR</div>
     <script type="text/javascript" src="./main.js"></script>
   </body>
 </html>
