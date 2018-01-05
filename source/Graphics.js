@@ -1,7 +1,7 @@
 import {regl} from './graphics/environment'
 import settings from './settings'
 import physics from './Physics'
-import seeThroughCamera from './graphics/Camera'
+import {seeThroughCamera} from './graphics/Camera'
 import drawFirmament from './graphics/Firmament'
 import drawMote from './graphics/Mote'
 

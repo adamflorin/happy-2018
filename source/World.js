@@ -1,4 +1,8 @@
 import Stats from 'stats-js'
+import multiply from 'gl-mat4/multiply'
+import invert from 'gl-mat4/invert'
+import vec3 from 'gl-vec3'
+import {viewMatrix, projectionMatrix, eye} from './graphics/Camera'
 import Graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
@@ -65,9 +69,10 @@ class World {
       document.getElementsByTagName('canvas')[0].addEventListener(
         'mousedown',
         event => {
-          const x = (event.x / window.innerWidth - 0.5) * 2.0
-          const y = (event.y / window.innerHeight - 0.5) * 2.0
-          const angle = Math.atan2(-y, x)
+          const screenX = 2.0 * (event.x / window.innerWidth - 0.5)
+          const screenY = -2.0 * (event.y / window.innerHeight - 0.5)
+          const yPlanePosition = this._screenToYPlane(screenX, screenY)
+          const angle = Math.atan2(-yPlanePosition.z, yPlanePosition.x)
           physics.blow(0, angle + Math.PI)
         }
       )
@@ -79,6 +84,27 @@ class World {
         audio.toggleMute()
       }
     })
+  }
+
+  _screenToYPlane(screenX, screenY) {
+    const viewProjectionMatrix = multiply([], projectionMatrix, viewMatrix)
+    const inverseViewProjectionMatrix = invert([], viewProjectionMatrix)
+    const rayPoint = vec3.transformMat4(
+      [],
+      [screenX, screenY, 0.0],
+      inverseViewProjectionMatrix
+    )
+
+    let deltaY = eye[1] - rayPoint[1]
+    let deltaZ = eye[2] - rayPoint[2]
+    let slopeZ = deltaZ / deltaY
+    let realZ = eye[2] - eye[1] * slopeZ
+
+    let deltaX = eye[0] - rayPoint[0]
+    let slopeX = deltaX / deltaY
+    let realX = eye[0] - eye[1] * slopeX
+
+    return {x: realX, z: realZ}
   }
 
   _initStats() {
