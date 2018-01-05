@@ -24,7 +24,7 @@ void main() {
   color = mix(color, vLightAColor, vec3(value1, value1, value1));
   color = mix(color, vLightBColor, vec3(value2, value2, value2));
 
-  float alpha = 1.0; //0.4 + vDistanceToCenter * 0.6;
+  float alpha = 0.6 + vDistanceToCenter * 0.4;
 
   gl_FragColor = vec4(color, alpha);
 }
@@ -34,5 +34,5 @@ float lambert(vec3 lightPosition, vec3 normal) {
   float value = max(0.0, dot(lightDirection, normal));
 
   // now make effect more subtle
-  return mix(0.0, 0.4, value);
+  return mix(0.0, 0.2, value);
 }

@@ -18,7 +18,7 @@ class Settings {
     this.backgroundColor = '#000000'
     this.shadowColor = '#000000'
     this.lightAColor = '#ffffff'
-    this.lightBColor = '#000000'
+    this.lightBColor = '#ffffff'
   }
 }
 
