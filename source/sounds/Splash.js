@@ -1,13 +1,13 @@
 import Tone from 'tone'
 import {normalize, magnitude, dot} from '../utils'
 
-const defaultVolume = -12.0
-
 export default class Splash {
   constructor(index) {
+    this._index = index
+
     this.frequency = this._getBaseFrequency(index)
 
-    this.output = new Tone.Volume(0.0)
+    this.output = new Tone.Volume(-6.0)
 
     this._createSoftChain()
     this._createTriggerChain()
@@ -32,21 +32,33 @@ export default class Splash {
   _createSoftChain() {
     this.softFilter = new Tone.Filter({
       frequency: 5000,
-      type: 'bandpass',
+      type: 'highpass',
       Q: 1.0,
       gain: 0.8
     }).connect(this.output)
 
-    this.softEnvelope = new Tone.Volume(defaultVolume).connect(this.softFilter)
+    this.softEnvelope = new Tone.Volume(-12.0).connect(this.softFilter)
   }
 
   _createSource() {
     const source = new Tone.Gain()
 
-    new Tone.Oscillator({
-      type: 'sawtooth',
-      frequency: this.frequency * 0.99
-    }).connect(source).start()
+    var carrier = new Tone.Oscillator({
+      type: 'sine',
+      frequency: this.frequency
+    }).start()
+
+    var modulator = new Tone.Oscillator({
+      type: 'sine',
+      frequency: this.frequency * 1.1,
+      volume: -12.0
+    }).start()
+
+    var modulationNode = new Tone.Multiply(5000)
+
+    modulator.connect(modulationNode)
+    modulationNode.connect(carrier.frequency)
+    carrier.connect(source)
 
     return source
   }
@@ -57,21 +69,24 @@ export default class Splash {
 
   updateObject(object) {
     let volume = -96.0
+    let frequency = 20000
     const {position, lastDelta} = object
 
     const positionMagnitude = magnitude(position)
     const velocityMagnitude = magnitude(lastDelta)
 
-    if (velocityMagnitude > 0.01) {
-      const dotProduct = dot(normalize(position), normalize(lastDelta))
-      const movingAway = (dotProduct > 0.0)
-      if (movingAway) {
-        volume += 48.0 + (2.0 * positionMagnitude) * 48.0
-        volume = Math.min(0.0, volume)
-      }
+    if (positionMagnitude > 0.01) {
+      // const dotProduct = dot(normalize(position), normalize(lastDelta))
+      // const movingAway = (dotProduct > 0.0)
+      volume += 48.0 + (2.0 * positionMagnitude) * 48.0
+      volume = Math.min(0.0, volume)
+
+      let eased = 1.0 - Math.pow(1.0 - positionMagnitude, 2.0)
+      frequency = 10000.0 - eased * 9000.0
     }
 
     this.softEnvelope.volume.value = volume
+    this.softFilter.frequency.value = frequency
   }
 
   trigger() {
