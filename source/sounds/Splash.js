@@ -13,7 +13,7 @@ export default class Splash {
     this._createTriggerChain()
 
     this.source = this._createSource()
-    this.source.fan(this.triggerGain, this.softEnvelope)
+    this.source.fan(this.triggerGain, this.softFilter)
   }
 
   _createTriggerChain() {
@@ -26,33 +26,40 @@ export default class Splash {
 
     this.triggerGain = new Tone.Gain(0.2).connect(this.triggerFilter)
 
-    this.triggerEnvelope = new Tone.Envelope().connect(this.triggerGain.gain)
+    this.triggerEnvelope = new Tone.Envelope({
+      attack: 0.1
+    }).connect(this.triggerGain.gain)
   }
 
   _createSoftChain() {
-    var softGain = new Tone.Gain(1.0).connect(this.output)
+    this.softVolume = new Tone.Volume(0.0).connect(this.output)
+
+    var softGain = new Tone.Gain(1.0).connect(this.softVolume)
 
     this.softLFO = new Tone.LFO({
-      frequency: 20.0,
+      frequency: 10.0,
       type: 'sawtooth',
-      min: 0.8,
+      min: 0.5,
       max: 0.0
     }).start()
     var lfoFilter = new Tone.Filter({
       type: 'lowpass',
       frequency: 1000
     })
+    var lfoPow = new Tone.Pow(1.0)
 
     this.softFilter = new Tone.Filter({
-      frequency: 5000,
+      frequency: this.frequency * 4.0,
       type: 'highpass',
-      Q: 1.0,
-      gain: 0.8
+      Q: 80.0
     }).connect(softGain)
 
-    this.softLFO.chain(lfoFilter, softGain.gain)
+    new Tone.Noise({
+      type: 'white',
+      volume: -48.0
+    }).connect(this.softFilter).start()
 
-    this.softEnvelope = new Tone.Volume(-12.0).connect(this.softFilter)
+    this.softLFO.chain(lfoFilter, lfoPow, softGain.gain)
   }
 
   _createSource() {
@@ -62,7 +69,8 @@ export default class Splash {
 
     var carrier = new Tone.Oscillator({
       type: 'sine',
-      frequency: this.frequency
+      frequency: this.frequency,
+      volume: 6.0
     }).start()
 
     var modulator = new Tone.Oscillator({
@@ -71,11 +79,12 @@ export default class Splash {
       volume: -12.0
     }).start()
 
-    var modulationNode = new Tone.Multiply(modulationIndex)
+    let modulationScale = new Tone.AudioToGain()
+    let modulationNode = new Tone.Gain(0)
 
-    modulator.connect(modulationNode)
+    modulator.chain(modulationScale, modulationNode.gain)
     modulationNode.connect(carrier.frequency)
-    carrier.connect(source)
+    carrier.chain(modulationNode, source)
 
     return source
   }
@@ -94,19 +103,13 @@ export default class Splash {
 
     if (positionMagnitude > 0.01) {
       let limitedMagnitude = Math.min(0.6, positionMagnitude)
+      limitedMagnitude = Math.pow(limitedMagnitude, 2.0)
 
-      // const dotProduct = dot(normalize(position), normalize(lastDelta))
-      // const movingAway = (dotProduct > 0.0)
-
-      volume += 48.0 + (2.0 * limitedMagnitude) * 48.0
+      volume = -48.0 + limitedMagnitude * 120.0
       volume = Math.min(0.0, volume)
-
-      let eased = 1.0 - Math.pow(1.0 - limitedMagnitude, 2.0)
-      frequency = 10000.0 - eased * 9000.0
     }
 
-    this.softEnvelope.volume.value = volume
-    this.softFilter.frequency.value = frequency
+    this.softVolume.volume.value = volume
   }
 
   trigger() {
