@@ -24,7 +24,7 @@ class World {
     }
 
     if (renderGraphics) {
-      graphics.setNumObjects(numObjects)
+      graphics.createObjects(numObjects)
     }
     physics.createObjects(numObjects)
     audio.createSounds(numObjects)

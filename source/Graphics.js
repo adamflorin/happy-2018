@@ -3,13 +3,13 @@ import settings from './settings'
 import physics from './Physics'
 import {seeThroughCamera} from './graphics/Camera'
 import drawFirmament from './graphics/Firmament'
-import drawMote from './graphics/Mote'
+import Mote from './graphics/Mote'
 
 const doPostProcess = false
 
 export default class Graphics {
   constructor() {
-    this._objectStates = []
+    this._motes = []
 
     this._fbo = regl.framebuffer({
       color: regl.texture({
@@ -46,9 +46,13 @@ export default class Graphics {
     regl.frame(context => this._onFrame(context))
   }
 
-  setNumObjects(numObjects) {
+  createObjects(numObjects) {
     this._numObjects = numObjects
-    this._initObjectStates()
+
+    for (let index = 0; index < numObjects; index++) {
+      const mote = new Mote()
+      this._motes.push(mote)
+    }
   }
 
   onFrame(callback) {
@@ -56,28 +60,7 @@ export default class Graphics {
   }
 
   trigger(objectIndex) {
-    let objectState = this._objectStates[objectIndex]
-    objectState.decay = 1.0
-    clearInterval(objectState.decayIntervalId)
-    objectState.decayIntervalId = setInterval(
-      () => {
-        objectState.decay -= 0.05
-        if (objectState.decay < 0.0) {
-          objectState.decay = 0.0
-          clearInterval(objectState.decayIntervalId)
-        }
-      },
-      1000.0 / 60.0
-    )
-  }
-
-  _initObjectStates() {
-    for (var index = 0; index < this._numObjects; index++) {
-      this._objectStates.push({
-        decay: 0.0,
-        decayIntervalId: null
-      })
-    }
+    this._motes[objectIndex].trigger()
   }
 
   _onFrame({viewportWidth, viewportHeight}) {
@@ -114,21 +97,21 @@ export default class Graphics {
           lightAColor: this._floatColor(settings.lightAColor),
           lightBColor: this._floatColor(settings.lightBColor)
         }
-        const moteProps = []
-        for (var index = 0; index < this._numObjects; index++) {
-          const moteFloat = index / this._numObjects
+        this._motes.forEach((mote, moteIndex) => {
+          const moteProps = []
+          const moteFloat = moteIndex / this._numObjects
           moteProps.push(
             Object.assign(
               {
                 hue: moteFloat,
-                objectPosition: physics.getObjectPosition(index),
-                scale: settings.objectScale + 0.05 * this._objectStates[index].decay
+                objectPosition: physics.getObjectPosition(moteIndex),
+                scale: settings.objectScale + 0.05 * mote.getDecay()
               },
               moteBaseProps
             )
           )
-        }
-        drawMote(moteProps)
+          mote.draw(moteProps)
+        })
       }
     )
   }
