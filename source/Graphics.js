@@ -51,7 +51,7 @@ export default class Graphics {
     this._numObjects = numObjects
 
     for (let index = 0; index < numObjects; index++) {
-      const mote = new Mote()
+      const mote = new Mote(index)
       this._motes.push(mote)
     }
   }

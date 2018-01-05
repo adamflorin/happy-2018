@@ -16,9 +16,11 @@ class Settings {
 
     // Color
     this.backgroundColor = '#000000'
-    this.shadowColor = '#000000'
+    this.baseColorA = '#000000'
+    this.baseColorB = '#ffffff'
+    this.baseColorC = '#ebb024'
     this.lightAColor = '#ffffff'
-    this.lightBColor = '#ffffff'
+    this.lightBColor = '#000000'
   }
 }
 
@@ -41,7 +43,9 @@ if (displayControls) {
 
   const colorFolder = gui.addFolder('Color')
   colorFolder.addColor(settings, 'backgroundColor')
-  colorFolder.addColor(settings, 'shadowColor')
+  colorFolder.addColor(settings, 'baseColorA')
+  colorFolder.addColor(settings, 'baseColorB')
+  colorFolder.addColor(settings, 'baseColorC')
   colorFolder.addColor(settings, 'lightAColor')
   colorFolder.addColor(settings, 'lightBColor')
 }
