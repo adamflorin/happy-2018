@@ -3,7 +3,7 @@ import lookAt from 'gl-mat4/lookAt'
 import perspective from 'gl-mat4/perspective'
 import {regl} from './environment'
 
-let eye = [0.0, 1.0, 3.0]
+let eye = [0.0, 0.5, 3.0]
 let center = [0.0, 0.0, 0.0]
 let up = [0.0, 1.0, 0.0]
 let viewMatrix = identity(new Float32Array(16))

@@ -1,19 +1,16 @@
 precision mediump float;
 
-varying vec3 vColor, vPosition;
+varying vec3 vPosition;
 
-const float pi = 3.1415;
+const float yThreshold = -5.0;
+const float yGradientRange = 50.0;
 
 void main() {
-  vec3 color = vColor;
-
-  float yPlanAngle = atan(vPosition.z, vPosition.x);
-  if (
-    (mod(yPlanAngle, pi / 16.0) < 0.003) &&
-    (mod(abs(vPosition.y), 0.1) < 0.003)
-  ) {
-    color += 0.4;
+  float shade = clamp(abs(vPosition.y - yThreshold), 0.0, yGradientRange) / yGradientRange;
+  shade = 1.0 - pow(1.0 - shade, 6.0);
+  shade = mix(0.8, 0.98, shade);
+  if (vPosition.y < yThreshold) {
+    shade *= 0.96;
   }
-
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(vec3(shade), 1.0);
 }

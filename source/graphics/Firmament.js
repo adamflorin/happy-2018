@@ -13,8 +13,6 @@ export default regl({
   elements: mesh.cells,
 
   uniforms: {
-    zenithColor: regl.prop('zenithColor'),
-    horizonColor: regl.prop('horizonColor')
   },
 
   cull: {

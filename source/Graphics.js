@@ -96,7 +96,7 @@ export default class Graphics {
   }
 
   _drawScene() {
-    let eye = [0.0, 1.0, 3.0]
+    let eye = [0.0, 0.5, 3.0]
     let center = [0.0, 0.0, 0.0]
     let up = [0.0, 1.0, 0.0]
 
@@ -108,10 +108,7 @@ export default class Graphics {
           depth: 1
         })
 
-        drawFirmament({
-          zenithColor: [0.1, 0.1, 0.1],
-          horizonColor: [0.5, 0.5, 0.5]
-        })
+        drawFirmament()
 
         const moteBaseProps = {
           lightAColor: this._floatColor(settings.lightAColor),
