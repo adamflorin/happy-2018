@@ -1,5 +1,5 @@
 import settings from './settings'
-import {mix, wrapRadians, computeDelta} from './utils'
+import {mix, wrapRadians, computeDelta, magnitude} from './utils'
 
 const objectGravityDistanceThreshold = 0.01
 
@@ -8,11 +8,30 @@ class Physics {
     this._objects = []
   }
 
-  blow(objectIndex, angle) {
-    this._objects.forEach(object => {
-      object.forces.wind.angle = angle
-      object.forces.wind.magnitude = settings.initialWindForce
+  blow(position) {
+    let nearestIndex
+    let shortestDistance = 9999.0
+    this._objects.forEach((object, index) => {
+      if (object.stable) {
+        return
+      }
+      let vector = {
+        x: position.x - object.position.x,
+        y: position.y - object.position.y
+      }
+      let distance = magnitude(vector)
+      if (distance < shortestDistance) {
+        nearestIndex = index
+        shortestDistance = distance
+      }
     })
+    let windObject = this._objects[nearestIndex]
+    let windAngle = Math.atan2(
+      -(windObject.position.y - position.y),
+      windObject.position.x - position.x
+    )
+    windObject.forces.wind.angle = windAngle
+    windObject.forces.wind.magnitude = settings.initialWindForce
   }
 
   getObject(objectIndex) {

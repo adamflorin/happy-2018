@@ -72,8 +72,7 @@ class World {
           const screenX = 2.0 * (event.x / window.innerWidth - 0.5)
           const screenY = -2.0 * (event.y / window.innerHeight - 0.5)
           const yPlanePosition = this._screenToYPlane(screenX, screenY)
-          const angle = Math.atan2(-yPlanePosition.z, yPlanePosition.x)
-          physics.blow(0, angle + Math.PI)
+          physics.blow(yPlanePosition)
         }
       )
     }
@@ -104,7 +103,7 @@ class World {
     let slopeX = deltaX / deltaY
     let realX = eye[0] - eye[1] * slopeX
 
-    return {x: realX, z: realZ}
+    return {x: realX, y: realZ}
   }
 
   _initStats() {
