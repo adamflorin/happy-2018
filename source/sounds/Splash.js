@@ -25,7 +25,7 @@ export default class Splash {
     let volume = -96.0
     let frequency = 20000
     let sourceModulatorVolume = -24.0
-    let lfoFrequency = 10.0
+    let lfoFrequency = 5.0
     let noiseVolume = -48.0
 
     const {position, lastDelta} = object
@@ -41,7 +41,7 @@ export default class Splash {
         sourceModulatorVolume = -24.0
         lfoFrequency *= 1.0 + distance * 0.5
       } else {
-        lfoFrequency = 5.0
+        lfoFrequency = 2.5
         noiseVolume = -36.0 - distance * 24.0
       }
 
@@ -114,10 +114,10 @@ export default class Splash {
     const softGain = new Tone.Gain(1.0).connect(this.softVolume)
 
     this.softLFO = new Tone.LFO({
-      frequency: 10.0,
-      type: 'sawtooth',
+      frequency: 5.0,
+      type: 'sine',
       min: 0.5,
-      max: 0.0
+      max: 0.3
     }).start()
 
     const lfoFilter = new Tone.Filter({
