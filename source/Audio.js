@@ -47,22 +47,22 @@ class Audio {
   _initMixer() {
     this.output = new Tone.Volume(0.0).toMaster()
 
-    const reverb = new Tone.Freeverb({
-      roomSize: 0.2,
-      dampening: 12000
-    }).connect(this.output)
-
     const limiter = new Tone.Limiter({
       threshold: -0.3
-    }).connect(reverb)
+    }).connect(this.output)
+
+    const reverb = new Tone.Freeverb({
+      roomSize: 0.5,
+      dampening: 12000
+    }).connect(limiter)
 
     this.master = new Tone.Compressor({
-      ratio: 12,
-      threshold: -24,
-      release: 0.25,
+      ratio: 2.0,
+      threshold: -24.0,
+      release: 0.5,
       attack: 0.003,
       knee: 30
-    }).connect(limiter)
+    }).connect(reverb)
   }
 }
 
