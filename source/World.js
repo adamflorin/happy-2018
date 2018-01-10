@@ -118,6 +118,7 @@ class World {
     )
 
     let deltaY = eye[1] - rayPoint[1]
+    deltaY = Math.max(0.001, deltaY) // treat taps above horizon as on horizon
     let deltaZ = eye[2] - rayPoint[2]
     let slopeZ = deltaZ / deltaY
     let realZ = eye[2] - eye[1] * slopeZ
