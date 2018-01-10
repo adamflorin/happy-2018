@@ -38,9 +38,11 @@ class Audio {
   }
 
   _initMobileSwitch() {
-    const onSwitch = document.getElementById('start-audio-mobile')
-    StartAudioContext(Tone.context, '#start-audio-mobile', () => {
-      onSwitch.remove()
+    const unmuteEl = document.getElementById('play-sound')
+    const greetingEl = document.getElementById('greeting')
+    StartAudioContext(Tone.context, unmuteEl, () => {
+      greetingEl.style.opacity = 1.0
+      unmuteEl.remove()
     })
   }
 

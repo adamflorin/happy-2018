@@ -4,43 +4,71 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Happy 2018 💞 adamflorin.work</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300" rel="stylesheet">
     <style media="screen">
-      body {
-        font-family: 'Open Sans Condensed', sans-serif;
-        font-size: 16px;
+      html, body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
       }
-      a#start-audio-mobile {
+      body {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: #333;
+      }
+      canvas {
+        position: fixed !important;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      a#play-sound {
         display: block;
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        height: 1em;
-        font-size: 300%;
-        background-color: rgba(0.6, 0.0, 0.0, 0.2);
-        text-align: center;
-        color: white;
-        z-index: 1;
+        bottom: 0;
+        background: url('./images/mute-icon.svg');
+        background-size: 50%;
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 2;
+        opacity: 0.6;
+        text-indent: -9999px;
       }
       #greeting {
-        position: absolute;
+        position: fixed;
         top: 50%;
         left: 0;
         right: 0;
         transform: translateY(-50%);
         text-align: center;
         line-height: 1em;
+        font-family: 'Open Sans Condensed', sans-serif;
         font-size: 900%;
         color: white;
         z-index: 1;
         pointer-events: none;
+        opacity: 0.0;
+        transition: opacity 250ms;
+      }
+      #attribution {
+        position: fixed;
+        bottom: 0.5em;
+        right: 1em;
+        font-size: 100%;
+        z-index: 1;
       }
     </style>
   </head>
   <body>
-    <a id="start-audio-mobile">Play Sound</a>
+    <a id="play-sound">Play sound</a>
     <div id="greeting">HAPPY NEW YEAR</div>
+    <div id="attribution">
+      —<a href="http://adamflorin.work/">Adam Florin</a> 2018
+    </div>
     <script type="text/javascript" src="./main.js"></script>
   </body>
 </html>
