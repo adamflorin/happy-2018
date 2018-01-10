@@ -9,61 +9,11 @@ export default class Splash {
 
     this.frequency = this._getBaseFrequency()
 
-    this.pannedOutput = new Tone.Panner()
-    this.createMotionModulation(
-      ({position}) => {
-        let pan = position.x
-        pan *= 2.0
-        pan = Math.min(1.0, Math.max(-1.0, pan))
-        this.pannedOutput.pan.value = pan
-      }
-    )
-
-    // filters
-    this.lowpassFilter = new Tone.Filter({
-      type: 'lowpass',
-      frequency: 2000,
-      Q: 1.0,
-      rolloff: -24
-    })
-    this.highpassFilter = new Tone.Filter({
-      type: 'highpass',
-      frequency: 2000,
-      Q: 1.0,
-      rolloff: -24
-    })
-
-    const sourceSum = new Tone.Volume(-12.0)
-    const source1 = this._createSource()
-    const source2 = this._createSource()
-    const source3 = this._createSource()
-    const source4 = this._createSource()
-    source1.connect(sourceSum)
-    source2.connect(sourceSum)
-    source3.connect(sourceSum)
-    source4.connect(sourceSum)
-
-    sourceSum.connect(this.lowpassFilter)
-
-    this.lowpassFilter.connect(this.highpassFilter)
-    this.highpassFilter.connect(this.pannedOutput)
-
-    this.createMotionModulation(
-      ({distance}) => {
-        const frequency = 150 + distance * 8000
-        const widthHz = 10.0
-        this.lowpassFilter.frequency.value = frequency + widthHz
-        this.highpassFilter.frequency.value = frequency - widthHz
-
-        const q = Math.pow(distance, 2.0) * 5.0
-        this.highpassFilter.Q.value = q
-        this.lowpassFilter.Q.value = q
-      }
-    )
+    this.mix = this._createSignalChain()
   }
 
   connect(node) {
-    this.pannedOutput.connect(node)
+    this.mix.connect(node)
   }
 
   modulateMotion({position, lastDelta, stable}) {
@@ -82,56 +32,174 @@ export default class Splash {
   }
 
   trigger() {
-    //
+    this.triggerEnvelope.triggerAttackRelease(0.3)
+    this.triggerFilterEnvelope.triggerAttackRelease(0.02)
   }
 
-  _createSource() {
-    const sum = new Tone.Volume(-6.0)
+  _createSignalChain() {
+    this.pannedOutput = this._createPannerNode()
 
-    let spread = 1.0
+    const prepanOutput = new Tone.Volume(0.0).connect(this.pannedOutput)
 
-    const oscillator1 = new Tone.Oscillator({
-      type: 'sawtooth',
-      frequency: this.frequency,
-      detune: 0.0 * 1200.0 * spread,
-      volume: -24.0
-    }).start()
+    const triggerChainInput = this._createTriggerChain(prepanOutput)
+    const softChainInput = this._createSoftChain(prepanOutput)
 
-    const oscillator2 = new Tone.Oscillator({
-      type: 'sawtooth',
-      frequency: this.frequency * 2.0,
-      detune: -0.004 * 1200.0 * spread,
-      volume: -24.0
-    }).start()
+    const sourceNode = this._createSourceNode()
+    sourceNode.fan(triggerChainInput, softChainInput)
 
-    const oscillator3 = new Tone.Oscillator({
-      type: 'sawtooth',
-      frequency: this.frequency * 4.0,
-      detune: 0.003 * 1200.0 * spread,
-      volume: -24.0
-    }).start()
+    return this.pannedOutput
+  }
+  
+  _createPannerNode() {
+    const pannedOutput = new Tone.Panner()
+    this._addMotionModulation(
+      ({position}) => {
+        let pan = position.x
+        pan *= 2.0
+        pan = Math.min(1.0, Math.max(-1.0, pan))
+        pannedOutput.pan.value = pan
+      }
+    )
+    return pannedOutput
+  }
 
-    oscillator1.connect(sum)
-    oscillator2.connect(sum)
-    oscillator3.connect(sum)
+  _createTriggerChain(output) {
+    const finalTriggerVolume = new Tone.Volume(-0.3).connect(output)
 
-    this.createMotionModulation(
+    const triggerCompressor = new Tone.Compressor({
+      ratio: 4.0,
+      threshold: -24.0,
+      release: 0.25,
+      attack: 0.003,
+      knee: 1.0
+    }).connect(finalTriggerVolume)
+
+    const triggerFilter = new Tone.Filter({
+      type: 'lowpass',
+      frequency: 2000,
+      Q: 5.0
+    }).connect(triggerCompressor)
+
+    this.triggerFilterEnvelope = new Tone.FrequencyEnvelope({
+      attack: 0.06,
+      decay: 0.2,
+      sustain: 0.0,
+      release: 2,
+      baseFrequency: this.frequency,
+      octaves: 8,
+      exponent: 2
+    })
+    this.triggerFilterEnvelope.connect(triggerFilter.frequency)
+
+    const triggerVolume = new Tone.Volume(0.0).connect(triggerFilter)
+
+    const triggerGain = new Tone.Gain(0.0).connect(triggerVolume)
+
+    this.triggerEnvelope = new Tone.Envelope({
+      attack: 0.1,
+      decay: 0.1,
+      sustain: 0.9,
+      release: 0.9
+    }).connect(triggerGain.gain)
+
+    return triggerGain
+  }
+
+  _createSoftChain(output) {
+    const softVolume = new Tone.Volume(0.0).connect(output)
+    this._addMotionModulation(
       ({distance}) => {
-        spread = 1.0 + distance * 1.0
-        oscillator1.detune.value = 0.0 * 1200.0 * spread
-        oscillator2.detune.value = -0.004 * 1200.0 * spread
-        oscillator3.detune.value = 0.003 * 1200.0 * spread
+        let volume = -48.0 + distance * 2.0 * 48.0
+        volume = Math.min(0.0, volume)
+        softVolume.volume.value = volume
       }
     )
 
-    return sum
+    const softGain = new Tone.Gain(1.0).connect(softVolume)
+
+    const softLFO = new Tone.LFO({
+      frequency: 5.0,
+      type: 'sine',
+      min: 0.5,
+      max: 0.3
+    }).start()
+    this._addMotionModulation(
+      ({distance, movingToCenter}) => {
+        let lfoFrequency = 2.5
+        if (!movingToCenter) {
+          lfoFrequency *= 1.0 + distance * 0.5
+        }
+        softLFO.frequency.value = lfoFrequency
+      }
+    )
+
+    const lfoFilter = new Tone.Filter({
+      type: 'lowpass',
+      frequency: 1000,
+      Q: 1.0
+    })
+
+    const lfoPow = new Tone.Pow(1.0)
+
+    const softFilter = new Tone.Filter({
+      frequency: this.frequency * 4.0,
+      type: 'highpass',
+      Q: 50.0
+    }).connect(softGain)
+
+    const noise = new Tone.Noise({
+      type: 'white',
+      volume: -48.0
+    }).connect(softFilter).start()
+    this._addMotionModulation(
+      ({distance, movingToCenter}) => {
+        let noiseVolume = -48.0
+        if (movingToCenter) {
+          noiseVolume = -36.0 - distance * 24.0
+        }
+        noise.volume.value = noiseVolume
+      }
+    )
+
+    softLFO.chain(lfoFilter, lfoPow, softGain.gain)
+
+    return softFilter
+  }
+
+  _createSourceNode() {
+    const sourceNode = new Tone.Gain()
+    const harmonicity = 3.0
+    const modulationIndex = 5000
+
+    const carrier = new Tone.Oscillator({
+      type: 'sine',
+      frequency: this.frequency,
+      volume: -18.0
+    }).start()
+
+    const sourceModulator = new Tone.Oscillator({
+      type: 'sine16',
+      frequency: this.frequency * harmonicity,
+      volume: -24.0
+    }).start()
+
+    const modulationScale = new Tone.AudioToGain()
+    const modulationNode = new Tone.Gain(0)
+
+    sourceModulator.chain(modulationScale, modulationNode.gain)
+    modulationNode.connect(carrier.frequency)
+    carrier.chain(modulationNode, sourceNode)
+
+    return sourceNode
   }
 
   _getBaseFrequency() {
-    return 146.83 * (this._index + 1.0)
+    let factor = Math.pow(1.5, this._index)
+    factor = 1.0 + (factor % 1.0)
+    return 110.0 * factor
   }
 
-  createMotionModulation(motionModulation) {
+  _addMotionModulation(motionModulation) {
     this._motionModulations.push(motionModulation)
   }
 }
