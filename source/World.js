@@ -58,7 +58,7 @@ class World {
     }
 
     physics.step()
-    audio.updateObjects()
+    audio.modulateModion()
 
     if (devMode) {
       this._stats.end()

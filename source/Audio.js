@@ -31,9 +31,9 @@ class Audio {
     this._splashes[objectIndex].trigger()
   }
 
-  updateObjects() {
+  modulateModion() {
     this._splashes.forEach((splash, index) => {
-      splash.updateObject(physics.getObject(index))
+      splash.modulateMotion(physics.getObject(index))
     })
   }
 
