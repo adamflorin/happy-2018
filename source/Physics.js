@@ -2,6 +2,7 @@ import {settings} from './settings'
 import {mix, wrapRadians, computeDelta, magnitude} from './utils'
 
 const objectGravityDistanceThreshold = 0.01
+const maxDistance = 1.0
 
 class Physics {
   constructor() {
@@ -154,6 +155,14 @@ class Physics {
     // apply delta
     object.position.x += object.lastDelta.x
     object.position.y += object.lastDelta.y
+
+    // limit position
+    const newDistance = magnitude(object.position)
+    const scalePosition = newDistance / maxDistance
+    if (scalePosition >= 1.0) {
+      object.position.x /= scalePosition
+      object.position.y /= scalePosition
+    }
   }
 }
 
