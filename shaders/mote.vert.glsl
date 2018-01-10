@@ -18,7 +18,7 @@ varying vec3 vBaseColor, vLightAColor, vLightBColor;
 const float reverseLimit = 2.0;
 
 void main() {
-  vDistanceToCenter = distance(objectPosition, vec2(0.0));
+  vDistanceToCenter = length(objectPosition);
   vDistortion = distortion;
   vBaseColor = baseColor;
 
@@ -26,7 +26,11 @@ void main() {
   surfacePosition = position * scale;
 
   // distort
-  surfacePosition *= 1.0 + vec3(distortion * vDistanceToCenter * 5.0);
+  surfacePosition *= mix(
+    1.0,
+    distortion * 5.0,
+    vDistanceToCenter
+  );
 
   // rotate
   surfacePosition = rotateY(objectPosition.x) * surfacePosition;
