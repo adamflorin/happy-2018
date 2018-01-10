@@ -8,6 +8,7 @@ class Settings {
     this.maxGravityForce = 0.01
     this.initialWindForce = 0.05
     this.windForceDecay = 0.96
+    this.maxDistance = 1.5
 
     // Object
     this.objectScale = 0.5
@@ -34,6 +35,7 @@ function displayControls() {
   physicsFolder.add(settings, 'maxGravityForce', 0.0, 0.1)
   physicsFolder.add(settings, 'initialWindForce', 0.0, 0.1)
   physicsFolder.add(settings, 'windForceDecay', 0.0, 1.0)
+  physicsFolder.add(settings, 'maxDistance', 0.0, 5.0)
   physicsFolder.open()
 
   const objectFolder = gui.addFolder('Object')
