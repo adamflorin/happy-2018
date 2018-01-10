@@ -53,18 +53,20 @@ class Audio {
       threshold: -0.3
     }).connect(this.output)
 
+    const reverbMix = new Tone.Gain(0.8).connect(limiter)
     const reverb = new Tone.Freeverb({
-      roomSize: 0.5,
+      roomSize: 0.8,
       dampening: 12000
-    }).connect(limiter)
+    }).connect(reverbMix)
 
+    const dryMix = new Tone.Gain(0.8).connect(limiter)
     this.master = new Tone.Compressor({
       ratio: 2.0,
       threshold: -24.0,
       release: 0.5,
       attack: 0.003,
       knee: 30
-    }).connect(reverb)
+    }).fan(reverb, dryMix)
   }
 }
 
