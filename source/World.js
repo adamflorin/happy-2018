@@ -8,7 +8,7 @@ import audio from './Audio'
 import physics from './Physics'
 import {displayControls} from './settings'
 
-const displayDevControls = false
+const devMode = false
 const renderGraphics = true
 const numObjects = 3
 
@@ -20,7 +20,7 @@ if (renderGraphics) {
 
 class World {
   constructor() {
-    if (displayDevControls) {
+    if (devMode) {
       this._initStats()
       displayControls()
     }
@@ -53,14 +53,14 @@ class World {
       requestAnimationFrame(() => this._onFrame())
     }
 
-    if (displayDevControls) {
+    if (devMode) {
       this._stats.begin()
     }
 
     physics.step()
     audio.updateObjects()
 
-    if (displayDevControls) {
+    if (devMode) {
       this._stats.end()
     }
   }
@@ -68,23 +68,44 @@ class World {
   _bindEvents() {
     // wind
     if (renderGraphics) {
-      document.getElementsByTagName('canvas')[0].addEventListener(
-        'mousedown',
-        event => {
-          const screenX = 2.0 * (event.x / window.innerWidth - 0.5)
-          const screenY = -2.0 * (event.y / window.innerHeight - 0.5)
-          const yPlanePosition = this._screenToYPlane(screenX, screenY)
-          physics.blow(yPlanePosition)
+      const canvas = document.getElementsByTagName('canvas')[0]
+
+      if ('ontouchstart' in document.documentElement) {
+        // mobile
+        canvas.addEventListener('touchstart', event => {
+          const touchIndex = event.touches.length - 1
+          this._handleTap({
+            x: event.touches[touchIndex].screenX,
+            y: event.touches[touchIndex].screenY
+          })
+        })
+      } else {
+        // desktop
+        canvas.addEventListener('mousedown', event => {
+          this._handleTap({x: event.x, y: event.y})
         }
-      )
+      )}
     }
 
     // mute
-    document.addEventListener('keyup', event => {
-      if (event.key === ' ') {
-        audio.toggleMute()
-      }
-    })
+    if (devMode) {
+      document.addEventListener('keyup', event => {
+        if (event.key === ' ') {
+          audio.toggleMute()
+        }
+      })
+    }
+  }
+
+  _handleTap(point) {
+    const windowWidth = window.innerWidth * window.devicePixelRatio
+    const windowHeight = window.innerHeight * window.devicePixelRatio
+
+    const screenX = 2.0 * (point.x / window.innerWidth - 0.5)
+    const screenY = -2.0 * (point.y / window.innerHeight - 0.5)
+
+    const yPlanePosition = this._screenToYPlane(screenX, screenY)
+    physics.blow(yPlanePosition)
   }
 
   _screenToYPlane(screenX, screenY) {
