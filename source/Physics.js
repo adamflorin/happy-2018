@@ -2,7 +2,7 @@ import {settings} from './settings'
 import {mix, wrapRadians, computeDelta, magnitude} from './utils'
 
 const objectGravityDistanceThreshold = 0.01
-const maxDistance = 1.0
+const maxDistance = 1.5
 
 class Physics {
   constructor() {
