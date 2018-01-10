@@ -27,14 +27,13 @@ a#play-sound {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('./images/mute-icon.svg');
+  background: url('../images/mute-icon.svg');
   background-size: 50%;
   background-repeat: no-repeat;
   background-position: center;
   z-index: 2;
   opacity: 0.6;
   text-indent: -9999px;
-  pointer-events: none;
 }
 
 #greeting {
@@ -50,9 +49,12 @@ a#play-sound {
   color: white;
   z-index: 1;
   opacity: 0.0;
-  transition: opacity 250ms;
   pointer-events: none;
 }
+  #greeting.on {
+    opacity: 1.0;
+    transition: opacity 250ms;
+  }
 
 #attribution {
   position: fixed;
@@ -60,5 +62,4 @@ a#play-sound {
   right: 1em;
   font-size: 100%;
   z-index: 1;
-  pointer-events: none;
 }

@@ -41,7 +41,7 @@ class Audio {
     const unmuteEl = document.getElementById('play-sound')
     const greetingEl = document.getElementById('greeting')
     StartAudioContext(Tone.context, unmuteEl, () => {
-      greetingEl.style.opacity = 1.0
+      greetingEl.className = 'on'
       unmuteEl.remove()
     })
   }
