@@ -40,6 +40,10 @@ function magnitude(vector) {
   return Math.sqrt(vector.x * vector.x + vector.y * vector.y)
 }
 
+function angle(vector) {
+  return Math.atan2(vector.y, vector.x)
+}
+
 function dot(vectorA, vectorB) {
   return vectorA.x * vectorB.x + vectorA.y * vectorB.y
 }
@@ -51,5 +55,6 @@ module.exports = {
   computeDelta,
   normalize,
   magnitude,
+  angle,
   dot
 }
