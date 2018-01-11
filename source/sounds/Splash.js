@@ -17,18 +17,17 @@ export default class Splash {
   }
 
   modulateMotion({position, lastDelta, stable}) {
-    if (!stable) {
-      const motionParams = {
-        position,
-        distance: magnitude(position) / settings.maxDistance,
-        velocity: magnitude(lastDelta),
-        motionAngle: angle(lastDelta),
-        movingToCenter: (dot(normalize(position), normalize(lastDelta)) < 0.0)
-      }
-      this._motionModulations.forEach(motionModulation => {
-        motionModulation(motionParams)
-      })
+    const motionParams = {
+      position,
+      stable,
+      distance: magnitude(position) / settings.maxDistance,
+      velocity: magnitude(lastDelta) * 30.0, // ~ 0 - 1.0 range (max ~ 1.5)
+      motionAngle: angle(lastDelta),
+      movingToCenter: (dot(normalize(position), normalize(lastDelta)) < 0.0)
     }
+    this._motionModulations.forEach(motionModulation => {
+      motionModulation(motionParams)
+    })
   }
 
   trigger() {
@@ -41,15 +40,16 @@ export default class Splash {
 
     const prepanOutput = new Tone.Volume(0.0).connect(this.pannedOutput)
 
-    const triggerChainInput = this._createTriggerChain(prepanOutput)
-    const softChainInput = this._createSoftChain(prepanOutput)
+    const triggerChain = this._createTriggerChain(prepanOutput)
+    const flutterChain = this._createFlutterChain(prepanOutput)
+    const droneChain = this._createDroneChain(prepanOutput)
 
     const sourceNode = this._createSourceNode()
-    sourceNode.fan(triggerChainInput, softChainInput)
+    sourceNode.fan(triggerChain, droneChain, flutterChain)
 
     return this.pannedOutput
   }
-  
+
   _createPannerNode() {
     const pannedOutput = new Tone.Panner()
     this._addMotionModulation(
@@ -64,15 +64,15 @@ export default class Splash {
   }
 
   _createTriggerChain(output) {
-    const finalTriggerVolume = new Tone.Volume(-0.3).connect(output)
+    const gain = new Tone.Volume(0.0).connect(output)
 
     const triggerCompressor = new Tone.Compressor({
       ratio: 4.0,
       threshold: -24.0,
-      release: 0.25,
       attack: 0.003,
-      knee: 1.0
-    }).connect(finalTriggerVolume)
+      release: 0.25,
+      knee: 20.0
+    }).connect(gain)
 
     const triggerFilter = new Tone.Filter({
       type: 'lowpass',
@@ -105,71 +105,110 @@ export default class Splash {
     return triggerGain
   }
 
-  _createSoftChain(output) {
-    const softVolume = new Tone.Volume(0.0).connect(output)
+  _createFlutterChain(output) {
+    const flutterVolume = new Tone.Volume(-18.0).connect(output)
     this._addMotionModulation(
       ({distance}) => {
-        let volume = -48.0 + distance * 2.0 * 48.0
-        volume = Math.min(0.0, volume)
-        softVolume.volume.value = volume
+        let volume = -24.0 + distance * 9.0
+        volume = Math.min(-6.0, volume)
+        flutterVolume.volume.value = volume
       }
     )
 
-    const softGain = new Tone.Gain(1.0).connect(softVolume)
+    const lfoGain = new Tone.Gain(1.0).connect(flutterVolume)
 
-    const softLFO = new Tone.LFO({
+    const flutterLFO = new Tone.LFO({
       frequency: 5.0,
-      type: 'sine',
-      min: 0.5,
+      type: 'sawtooth',
+      min: 0.9,
       max: 0.3
     }).start()
     this._addMotionModulation(
-      ({distance, movingToCenter}) => {
-        let lfoFrequency = 2.5
-        if (!movingToCenter) {
-          lfoFrequency *= 1.0 + distance * 0.5
-        }
-        softLFO.frequency.value = lfoFrequency
+      ({velocity}) => {
+        let lfoFrequency = 2.5 + (velocity * 15.0)
+        flutterLFO.frequency.value = lfoFrequency
       }
     )
-
     const lfoFilter = new Tone.Filter({
       type: 'lowpass',
       frequency: 1000,
       Q: 1.0
     })
-
     const lfoPow = new Tone.Pow(1.0)
 
-    const softFilter = new Tone.Filter({
+    const flutterFilter = new Tone.Filter({
       frequency: this.frequency * 4.0,
       type: 'highpass',
       Q: 50.0
-    }).connect(softGain)
+    }).connect(lfoGain)
+
+    this._addMotionModulation(
+      ({distance}) => {
+        let Q = distance * 150.0
+        Q = Math.min(40.0, Q)
+        flutterFilter.Q.value = Q
+      }
+    )
 
     const noise = new Tone.Noise({
       type: 'white',
       volume: -48.0
-    }).connect(softFilter).start()
+    }).fan(flutterFilter).start()
     this._addMotionModulation(
       ({distance, movingToCenter}) => {
-        let noiseVolume = -48.0
-        if (movingToCenter) {
-          noiseVolume = -36.0 - distance * 24.0
-        }
+        let noiseVolume = -48.0 + distance * 24.0
         noise.volume.value = noiseVolume
       }
     )
 
-    softLFO.chain(lfoFilter, lfoPow, softGain.gain)
+    flutterLFO.chain(lfoFilter, lfoPow, lfoGain.gain)
 
-    return softFilter
+    return flutterFilter
+  }
+
+  _createDroneChain(output) {
+    const volume = new Tone.Volume(0.0).connect(output)
+
+    const bandpass = new Tone.Filter({
+      type: 'bandpass',
+      frequency: 3000,
+      Q: 0.5
+    }).connect(volume)
+
+    this._addMotionModulation(
+      ({position, distance, movingToCenter}) => {
+        let volumeValue = -24.0 + 96.0 * distance
+        if (position.y > 0.0) {
+          volumeValue *= 0.5
+        }
+        volumeValue = Math.min(6.0, volumeValue)
+        volume.volume.value = volumeValue
+
+        bandpass.frequency.value = 800.0 + 8000.0 * distance
+
+        let Q = 0.5 + 5.0 * Math.pow(1.0 - distance, 16.0)
+        if (movingToCenter) {
+          Q *= 4.0
+        }
+        bandpass.Q.value = Q
+      }
+    )
+
+    return bandpass
   }
 
   _createSourceNode() {
-    const sourceNode = new Tone.Gain()
-    const harmonicity = 3.0
+    const harmonicity = 3.01
     const modulationIndex = 5000
+
+    const sourceNode = new Tone.Gain()
+
+    const saw = new Tone.Oscillator({
+      type: 'sawtooth32',
+      frequency: this.frequency * 2.0,
+      detune: -0.003 * 1200.0,
+      volume: -36.0
+    }).start()
 
     const carrier = new Tone.Oscillator({
       type: 'sine',
@@ -180,8 +219,17 @@ export default class Splash {
     const sourceModulator = new Tone.Oscillator({
       type: 'sine16',
       frequency: this.frequency * harmonicity,
+      detune: 0.008 * 1200.0,
       volume: -24.0
     }).start()
+    this._addMotionModulation(
+      ({velocity, position}) => {
+        let expVelocity = Math.pow(velocity, 3.0)
+        expVelocity = Math.min(expVelocity, 1.0)
+        sourceModulator.detune.value = position.y * 0.04 * 1200.0
+        saw.volume.value = -36.0 + 12.0 * expVelocity
+      }
+    )
 
     const modulationScale = new Tone.AudioToGain()
     const modulationNode = new Tone.Gain(0)
@@ -189,14 +237,13 @@ export default class Splash {
     sourceModulator.chain(modulationScale, modulationNode.gain)
     modulationNode.connect(carrier.frequency)
     carrier.chain(modulationNode, sourceNode)
+    saw.connect(sourceNode)
 
     return sourceNode
   }
 
   _getBaseFrequency() {
-    let factor = Math.pow(1.5, this._index)
-    factor = 1.0 + (factor % 1.0)
-    return 110.0 * factor
+    return 110.0 * (1.0 + this._index / 4.0)
   }
 
   _addMotionModulation(motionModulation) {
