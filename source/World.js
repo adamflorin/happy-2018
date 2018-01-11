@@ -73,6 +73,7 @@ class World {
       if ('ontouchstart' in document.documentElement) {
         // mobile
         canvas.addEventListener('touchstart', event => {
+          event.preventDefault()
           const touchIndex = event.touches.length - 1
           this._handleTap({
             x: event.touches[touchIndex].screenX,
@@ -82,6 +83,7 @@ class World {
       } else {
         // desktop
         canvas.addEventListener('mousedown', event => {
+          event.preventDefault()
           this._handleTap({x: event.x, y: event.y})
         }
       )}
