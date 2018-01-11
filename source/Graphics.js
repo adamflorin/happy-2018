@@ -91,8 +91,8 @@ export default class Graphics {
         drawFirmament()
 
         this._motes.forEach((mote, moteIndex) => {
-          const objectPosition = physics.getObjectPosition(moteIndex)
-          mote.draw(objectPosition, moteIndex / this._numObjects)
+          const {position} = physics.getObject(moteIndex)
+          mote.draw([position.x, position.y])
         })
       }
     )

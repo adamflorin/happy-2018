@@ -1,3 +1,4 @@
+import StartAudioContext from 'startaudiocontext'
 import Stats from 'stats-js'
 import multiply from 'gl-mat4/multiply'
 import invert from 'gl-mat4/invert'
@@ -6,6 +7,7 @@ import {viewMatrix, projectionMatrix, eye} from './graphics/Camera'
 import Graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
+import narrative from './Narrative'
 import {displayControls} from './settings'
 
 const devMode = false
@@ -25,10 +27,10 @@ class World {
       displayControls()
     }
 
+    physics.createObjects(numObjects)
     if (renderGraphics) {
       graphics.createObjects(numObjects)
     }
-    physics.createObjects(numObjects)
     audio.createSounds(numObjects)
     audio.init()
 
@@ -46,6 +48,7 @@ class World {
     })
 
     this._bindEvents()
+    this._startAudioContext()
   }
 
   _onFrame() {
@@ -97,6 +100,15 @@ class World {
         }
       })
     }
+  }
+
+  _startAudioContext() {
+    const unmuteEl = document.getElementById('play-sound')
+    const greetingEl = document.getElementById('greeting')
+    StartAudioContext(audio.getContext(), unmuteEl, () => {
+      greetingEl.className = 'on'
+      unmuteEl.remove()
+    })
   }
 
   _handleTap(point) {

@@ -1,15 +1,14 @@
 import Tone from 'tone'
-import StartAudioContext from 'startaudiocontext'
 import physics from './Physics'
 import Splash from './sounds/Splash'
-
-// Tone.Context.latencyHint = 'playback'
 
 class Audio {
   constructor() {
     this._splashes = []
+
+    // Tone.js context
+    // Tone.Context.latencyHint = 'playback'
     // Tone.Master.mute = true
-    this._initMobileSwitch()
   }
 
   createSounds(numStrikes) {
@@ -37,13 +36,8 @@ class Audio {
     })
   }
 
-  _initMobileSwitch() {
-    const unmuteEl = document.getElementById('play-sound')
-    const greetingEl = document.getElementById('greeting')
-    StartAudioContext(Tone.context, unmuteEl, () => {
-      greetingEl.className = 'on'
-      unmuteEl.remove()
-    })
+  getContext() {
+    return Tone.context
   }
 
   _initMixer() {

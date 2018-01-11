@@ -1,5 +1,5 @@
 import {settings} from './settings'
-import {mix, wrapRadians, computeDelta, magnitude} from './utils'
+import {mix, wrapRadians, computeDelta, magnitude, angle} from './utils'
 
 const objectGravityDistanceThreshold = 0.01
 
@@ -8,39 +8,20 @@ class Physics {
     this._objects = []
   }
 
-  blow(position) {
-    let nearestIndex
-    let shortestDistance = 9999.0
-    this._objects.forEach((object, index) => {
-      if (object.stable) {
-        // return
-      }
-      let vector = {
-        x: position.x - object.position.x,
-        y: position.y - object.position.y
-      }
-      let distance = magnitude(vector)
-      if (distance < shortestDistance) {
-        nearestIndex = index
-        shortestDistance = distance
-      }
-    })
-    let windObject = this._objects[nearestIndex]
-    let windAngle = Math.atan2(
-      windObject.position.y - position.y,
-      windObject.position.x - position.x
-    )
-    windObject.forces.wind.angle = windAngle
-    windObject.forces.wind.magnitude = settings.initialWindForce
+  blow(windPosition) {
+    const windObject = this._findNearestObject(windPosition)
+    let windVector = {
+      x: windObject.position.x - windPosition.x,
+      y: windObject.position.y - windPosition.y
+    }
+    windObject.forces.wind.angle = angle(windVector)
+    let scaledDistance = magnitude(windVector) / (settings.maxDistance * 5.0)
+    scaledDistance = Math.min(1.0, scaledDistance)
+    windObject.forces.wind.magnitude = settings.windForce * (1.0 - scaledDistance)
   }
 
   getObject(objectIndex) {
     return this._objects[objectIndex]
-  }
-
-  getObjectPosition(objectIndex) {
-    let object = this._objects[objectIndex]
-    return [object.position.x, object.position.y]
   }
 
   getObjectGravityDistance(objectIndex) {
@@ -69,7 +50,7 @@ class Physics {
           } else if (receivingObject.stable) {
             receivingObject.forces.wind = {
               angle: wrapRadians(object.forces.gravity.angle),
-              magnitude: settings.initialWindForce
+              magnitude: settings.strikeForce
             }
           }
         })
@@ -82,11 +63,14 @@ class Physics {
   }
 
   createObjects(numObjects) {
+    const frontAngleGap = Math.PI * 1.0
+    const angleRange = Math.PI * 2.0 - frontAngleGap
+    const angleOffset = (angleRange - Math.PI) / 2.0
     for (let index = 0; index < numObjects; index++) {
+      const indexFloat = index / numObjects;
       const object = this._createObject()
-      const angle = (index / numObjects) * (Math.PI * 2.0)
-      const distance = index * (1.0 / numObjects)
-
+      const angle = (indexFloat * angleRange) - angleOffset
+      const distance = (1.0 - indexFloat) * (settings.maxDistance * 1.0)
       object.position.x = Math.cos(angle) * distance
       object.position.y = Math.sin(angle) * distance
       this._objects.push(object)
@@ -162,6 +146,23 @@ class Physics {
       object.position.x /= scalePosition
       object.position.y /= scalePosition
     }
+  }
+
+  _findNearestObject(fromPosition) {
+    let nearestIndex
+    let shortestDistance = 9999.0
+    this._objects.forEach(({position}, index) => {
+      let vector = {
+        x: position.x - fromPosition.x,
+        y: position.y - fromPosition.y
+      }
+      let distance = magnitude(vector)
+      if (distance < shortestDistance) {
+        nearestIndex = index
+        shortestDistance = distance
+      }
+    })
+    return this._objects[nearestIndex]
   }
 }
 

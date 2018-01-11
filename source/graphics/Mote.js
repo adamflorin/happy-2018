@@ -30,7 +30,7 @@ export default class Mote {
     )
   }
 
-  draw(objectPosition, moteFloat) {
+  draw(objectPosition) {
     const moteBaseProps = {
       baseColor: floatColor(this._getBaseColor()),
       lightAColor: floatColor(settings.lightAColor),

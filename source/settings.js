@@ -6,7 +6,8 @@ class Settings {
     this.gravityInertia = 0.4
     this.gravityForceNumerator = 0.01
     this.maxGravityForce = 0.012
-    this.initialWindForce = 0.055
+    this.strikeForce = 0.055
+    this.windForce = 0.055
     this.windForceDecay = 0.96
     this.maxDistance = 1.5
 
@@ -35,7 +36,8 @@ function displayControls() {
   physicsFolder.add(settings, 'gravityInertia', 0.0, 1.0)
   physicsFolder.add(settings, 'gravityForceNumerator', 0.0, 1.0)
   physicsFolder.add(settings, 'maxGravityForce', 0.0, 0.1)
-  physicsFolder.add(settings, 'initialWindForce', 0.0, 0.1)
+  physicsFolder.add(settings, 'strikeForce', 0.0, 0.1)
+  physicsFolder.add(settings, 'windForce', 0.0, 0.5)
   physicsFolder.add(settings, 'windForceDecay', 0.0, 1.0)
   physicsFolder.add(settings, 'maxDistance', 0.0, 5.0)
   physicsFolder.open()
