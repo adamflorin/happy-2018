@@ -58,7 +58,7 @@ class Physics {
       let objectGravityDistance = this.getObjectGravityDistance(objectIndex)
       object.stable = (objectGravityDistance < objectGravityDistanceThreshold)
 
-      if (!objectWasStable && object.stable) {
+      if (objectWasStable && !object.stable) {
         this._objectStrikeCallback(objectIndex)
       }
 
