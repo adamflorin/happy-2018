@@ -184,7 +184,7 @@ export default class Splash {
         volumeValue = Math.min(6.0, volumeValue)
         volume.volume.value = volumeValue
 
-        bandpass.frequency.value = 800.0 + 8000.0 * distance
+        bandpass.frequency.value = 400.0 + 1200.0 * distance
 
         let Q = 0.5 + 5.0 * Math.pow(1.0 - distance, 16.0)
         if (movingToCenter) {
