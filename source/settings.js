@@ -5,8 +5,8 @@ class Settings {
     // Physics
     this.gravityInertia = 0.4
     this.gravityForceNumerator = 0.01
-    this.maxGravityForce = 0.01
-    this.initialWindForce = 0.05
+    this.maxGravityForce = 0.012
+    this.initialWindForce = 0.055
     this.windForceDecay = 0.96
     this.maxDistance = 1.5
 
@@ -18,6 +18,8 @@ class Settings {
     this.baseColorA = '#000000'
     this.baseColorB = '#ffffff'
     this.baseColorC = '#ebb024'
+    this.baseColorD = '#1133ff'
+    this.baseColorE = '#cc1122'
     this.lightAColor = '#ffffff'
     this.lightBColor = '#000000'
   }
@@ -46,6 +48,8 @@ function displayControls() {
   colorFolder.addColor(settings, 'baseColorA')
   colorFolder.addColor(settings, 'baseColorB')
   colorFolder.addColor(settings, 'baseColorC')
+  colorFolder.addColor(settings, 'baseColorD')
+  colorFolder.addColor(settings, 'baseColorE')
   colorFolder.addColor(settings, 'lightAColor')
   colorFolder.addColor(settings, 'lightBColor')
 }

@@ -10,7 +10,7 @@ import {displayControls} from './settings'
 
 const devMode = false
 const renderGraphics = true
-const numObjects = 3
+const numObjects = 5
 
 let graphics
 

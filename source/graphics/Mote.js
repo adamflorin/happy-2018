@@ -95,6 +95,10 @@ export default class Mote {
       return settings.baseColorB
     } else if (this._index === 2 ) {
       return settings.baseColorC
+    } else if (this._index === 3 ) {
+      return settings.baseColorD
+    } else if (this._index === 4 ) {
+      return settings.baseColorE
     }
   }
 }
