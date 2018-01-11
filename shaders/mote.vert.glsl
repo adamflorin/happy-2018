@@ -11,15 +11,15 @@ uniform float time, scale;
 uniform vec3 baseColor, lightAColor, lightBColor;
 uniform vec2 objectPosition;
 
-varying float vDistanceToCenter, vDistortion;
+varying float vDistanceToCenter;
 varying vec3 surfacePosition, lightPosition;
 varying vec3 vBaseColor, vLightAColor, vLightBColor;
 
 const float reverseLimit = 2.0;
+const float distortionScale = 5.0;
 
 void main() {
   vDistanceToCenter = length(objectPosition);
-  vDistortion = distortion;
   vBaseColor = baseColor;
 
   // scale
@@ -28,7 +28,7 @@ void main() {
   // distort
   surfacePosition *= mix(
     1.0,
-    distortion * 5.0,
+    distortion * distortionScale,
     vDistanceToCenter
   );
 
