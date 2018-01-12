@@ -21,7 +21,7 @@ class Settings {
     this.backgroundColor = '#000000'
     this.baseColorA = '#000000'
     this.baseColorB = '#e0e0e0'
-    this.baseColorC = '#ebb024' // softer: '#e1c27b'
+    this.baseColorC = '#e1c27b'
     this.baseColorD = '#d43232'
     this.baseColorE = '#0b25e6'
     this.lightAColor = '#cce1ed'
