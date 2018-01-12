@@ -78,6 +78,7 @@ class Narrative {
   }
 
   explainStorm() {
+    return
     this._delayStepTo('storm-1', 0)
       .then(() => this._delayStepTo('storm-2', 2000))
       .then(() => this._delayStepTo('storm-3', 2000))

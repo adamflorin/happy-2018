@@ -3,7 +3,7 @@ import dat from 'dat-gui'
 class Settings {
   constructor() {
     // World
-    this.rotationPeriod = 50.0
+    this.rotationPeriod = 15.0
 
     // Physics
     this.gravityInertia = 0.4
