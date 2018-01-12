@@ -22,8 +22,8 @@ class Settings {
     this.baseColorA = '#000000'
     this.baseColorB = '#e0e0e0'
     this.baseColorC = '#ebb024'
-    this.baseColorD = '#0b25e6'
-    this.baseColorE = '#d43232'
+    this.baseColorD = '#d43232'
+    this.baseColorE = '#0b25e6'
     this.lightAColor = '#cce1ed'
     this.lightBColor = '#2d0316'
   }
