@@ -8,7 +8,7 @@ import {floatColor} from './utils'
 
 const doPostProcess = false
 
-export default class Graphics {
+class Graphics {
   constructor() {
     this._motes = []
 
@@ -64,9 +64,9 @@ export default class Graphics {
     this._motes[objectIndex].trigger()
   }
 
-  _onFrame({viewportWidth, viewportHeight}) {
+  _onFrame({viewportWidth, viewportHeight, time}) {
     if (this._beforeFrameCallback) {
-      this._beforeFrameCallback()
+      this._beforeFrameCallback(time)
     }
 
     this._fbo.resize(viewportWidth, viewportHeight)
@@ -88,7 +88,7 @@ export default class Graphics {
           depth: 1
         })
 
-        drawFirmament()
+        drawFirmament({rotationPeriod: settings.rotationPeriod})
 
         this._motes.forEach((mote, moteIndex) => {
           const {position} = physics.getObject(moteIndex)
@@ -98,3 +98,5 @@ export default class Graphics {
     )
   }
 }
+
+export default new Graphics()

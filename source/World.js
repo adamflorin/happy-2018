@@ -3,22 +3,16 @@ import multiply from 'gl-mat4/multiply'
 import invert from 'gl-mat4/invert'
 import vec3 from 'gl-vec3'
 import {viewMatrix, projectionMatrix, eye} from './graphics/Camera'
-import Graphics from './Graphics'
+import graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
 import messages from './Messages'
 import {displayControls} from './settings'
 
 const devMode = false
-const renderGraphics = true
 const numObjects = 5
 const waitBeforeBeginDuration = 100
-
-let graphics
-
-if (renderGraphics) {
-  graphics = new Graphics()
-}
+const rotationPeriod = 10.0
 
 class World {
   constructor() {
@@ -28,17 +22,13 @@ class World {
     }
 
     physics.createObjects(numObjects)
-    if (renderGraphics) {
-      graphics.createObjects(numObjects)
-    }
+    graphics.createObjects(numObjects)
     audio.createSounds(numObjects)
     audio.init()
 
     physics.onObjectStrike(objectIndex => {
       audio.triggerStrike(objectIndex)
-      if (renderGraphics) {
-        graphics.trigger(objectIndex)
-      }
+      graphics.trigger(objectIndex)
     })
 
     this._bindEvents()
@@ -53,18 +43,10 @@ class World {
 
     setTimeout(() => messages.begin(), 500)
 
-    if (renderGraphics) {
-      graphics.beforeFrame(() => this._onFrame())
-    } else {
-      requestAnimationFrame(() => this._onFrame())
-    }
+    graphics.beforeFrame(time => this._onFrame(time))
   }
 
-  _onFrame() {
-    if (!renderGraphics) {
-      requestAnimationFrame(() => this._onFrame())
-    }
-
+  _onFrame(time) {
     if (devMode) {
       this._stats.begin()
     }
@@ -79,25 +61,23 @@ class World {
 
   _bindEvents() {
     // wind
-    if (renderGraphics) {
-      if ('ontouchstart' in document.documentElement) {
-        // mobile
-        this._getCanvas().addEventListener('touchstart', event => {
-          event.preventDefault()
-          const touchIndex = event.touches.length - 1
-          this._handleTap({
-            x: event.touches[touchIndex].screenX,
-            y: event.touches[touchIndex].screenY
-          })
+    if ('ontouchstart' in document.documentElement) {
+      // mobile
+      this._getCanvas().addEventListener('touchstart', event => {
+        event.preventDefault()
+        const touchIndex = event.touches.length - 1
+        this._handleTap({
+          x: event.touches[touchIndex].screenX,
+          y: event.touches[touchIndex].screenY
         })
-      } else {
-        // desktop
-        this._getCanvas().addEventListener('mousedown', event => {
-          event.preventDefault()
-          this._handleTap({x: event.x, y: event.y})
-        }
-      )}
-    }
+      })
+    } else {
+      // desktop
+      this._getCanvas().addEventListener('mousedown', event => {
+        event.preventDefault()
+        this._handleTap({x: event.x, y: event.y})
+      }
+    )}
 
     // mute
     if (devMode) {

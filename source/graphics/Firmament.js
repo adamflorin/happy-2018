@@ -13,6 +13,8 @@ export default regl({
   elements: mesh.cells,
 
   uniforms: {
+    time: regl.context('time'),
+    rotationPeriod: regl.prop('rotationPeriod')
   },
 
   cull: {

@@ -2,6 +2,9 @@ import dat from 'dat-gui'
 
 class Settings {
   constructor() {
+    // World
+    this.rotationPeriod = 10.0
+
     // Physics
     this.gravityInertia = 0.4
     this.gravityForceNumerator = 0.01
@@ -32,6 +35,9 @@ function displayControls() {
   const gui = new dat.GUI()
   gui.close()
 
+  const worldFolder = gui.addFolder('World')
+  worldFolder.add(settings, 'rotationPeriod', 0.01, 300.0)
+
   const physicsFolder = gui.addFolder('Physics')
   physicsFolder.add(settings, 'gravityInertia', 0.0, 1.0)
   physicsFolder.add(settings, 'gravityForceNumerator', 0.0, 1.0)
@@ -40,7 +46,6 @@ function displayControls() {
   physicsFolder.add(settings, 'windForce', 0.0, 0.5)
   physicsFolder.add(settings, 'windForceDecay', 0.0, 1.0)
   physicsFolder.add(settings, 'maxDistance', 0.0, 5.0)
-  physicsFolder.open()
 
   const objectFolder = gui.addFolder('Object')
   objectFolder.add(settings, 'objectScale', 0.0, 5.0)
