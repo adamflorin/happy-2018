@@ -10,7 +10,8 @@ import messages from './Messages'
 import {displayControls} from './settings'
 
 const devMode = false
-const numObjects = 5
+let lofi = false
+let numObjects = 5
 const waitBeforeBeginDuration = 100
 const rotationPeriod = 10.0
 
@@ -21,10 +22,15 @@ class World {
       displayControls()
     }
 
+    if (location.search.match(/lofi/)) {
+      lofi = true
+      numObjects = 3
+    }
+
     physics.createObjects(numObjects)
     graphics.createObjects(numObjects)
     audio.createSounds(numObjects)
-    audio.init()
+    audio.init(lofi)
 
     graphics.beforeFrame(time => this._onFrame(time))
     physics.onObjectStrike(objectIndex => {

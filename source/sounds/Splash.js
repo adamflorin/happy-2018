@@ -8,11 +8,10 @@ export default class Splash {
     this._motionModulations = []
 
     this.frequency = this._getBaseFrequency()
-
-    this.mix = this._createSignalChain()
   }
 
-  connect(node) {
+  connect(node, lofi) {
+    this.mix = this._createSignalChain(lofi)
     this.mix.connect(node)
   }
 
@@ -35,17 +34,24 @@ export default class Splash {
     this.triggerFilterEnvelope.triggerAttackRelease(0.02)
   }
 
-  _createSignalChain() {
+  _createSignalChain(lofi) {
     this.pannedOutput = this._createPannerNode()
 
     const prepanOutput = new Tone.Volume(0.0).connect(this.pannedOutput)
 
     const triggerChain = this._createTriggerChain(prepanOutput)
-    const flutterChain = this._createFlutterChain(prepanOutput)
+    let flutterChain
+    if (!lofi) {
+      flutterChain = this._createFlutterChain(prepanOutput)
+    }
     const droneChain = this._createDroneChain(prepanOutput)
 
     const sourceNode = this._createSourceNode()
-    sourceNode.fan(triggerChain, droneChain, flutterChain)
+    if (!lofi) {
+      sourceNode.fan(triggerChain, droneChain, flutterChain)
+    } else {
+      sourceNode.fan(triggerChain, droneChain)
+    }
 
     return this.pannedOutput
   }

@@ -19,9 +19,9 @@ class Audio {
     }
   }
 
-  init() {
-    this._initMixer()
-    this._splashes.forEach(splash => splash.connect(this.master))
+  init(lofi) {
+    this._initMixer(lofi)
+    this._splashes.forEach(splash => splash.connect(this.master, lofi))
   }
 
   begin() {
@@ -46,18 +46,23 @@ class Audio {
     return Tone.context
   }
 
-  _initMixer() {
+  _initMixer(lofi) {
+    let reverbMix
+    let reverb
+
     this.output = new Tone.Volume(-96.0).toMaster()
 
     const limiter = new Tone.Limiter({
       threshold: -0.3
     }).connect(this.output)
 
-    const reverbMix = new Tone.Gain(0.6).connect(limiter)
-    const reverb = new Tone.Freeverb({
-      roomSize: 0.6,
-      dampening: 12000
-    }).connect(reverbMix)
+    if (!lofi) {
+      reverbMix = new Tone.Gain(0.6).connect(limiter)
+      reverb = new Tone.Freeverb({
+        roomSize: 0.6,
+        dampening: 12000
+      }).connect(reverbMix)
+    }
 
     const dryMix = new Tone.Gain(0.4).connect(limiter)
     this.master = new Tone.Compressor({
@@ -66,7 +71,13 @@ class Audio {
       release: 0.5,
       attack: 0.003,
       knee: 30
-    }).fan(reverb, dryMix)
+    })
+
+    if (!lofi) {
+      this.master.fan(reverb, dryMix)
+    } else {
+      this.master.connect(dryMix)
+    }
   }
 }
 
