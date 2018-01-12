@@ -44,7 +44,7 @@ class Narrative {
   tapped() {
     if (this._currentStepId === 'prompt-i-1') {
       this._stepTo('prompt-i-1-response')
-      this._delayStepTo('prompt-i-2', 1000)
+      this._delayStepTo('prompt-i-2', 2000)
     } else if (this._currentStepId === 'prompt-i-2') {
       this._stepTo('prompt-i-3')
     } else if (this._currentStepId === 'prompt-i-3') {
@@ -69,10 +69,10 @@ class Narrative {
   }
 
   explain() {
-    this._delayStepTo('explanation-0', 1000)
-      .then(() => this._delayStepTo('explanation-1', 2000))
-      .then(() => this._delayStepTo('explanation-2', 2000))
-      .then(() => this._delayStepTo('pre-prompt-ii', 2000))
+    this._delayStepTo('explanation-0', 2000)
+      .then(() => this._delayStepTo('explanation-1', 3000))
+      .then(() => this._delayStepTo('explanation-2', 3000))
+      .then(() => this._delayStepTo('pre-prompt-ii', 3000))
       .then(() => this._delayStepTo('prompt-ii', 500))
   }
 
@@ -82,7 +82,7 @@ class Narrative {
       .then(() => this._delayStepTo('storm-3', 2000))
       .then(() => this._delayStepTo('storm-4', 2000))
       .then(() => this._delayStepTo('post-storm', 2000))
-      .then(() => this._delayStepTo('greeting', 500))
+      .then(() => this._delayStepTo('greeting', 1000))
   }
 
   _stepTo(id) {
