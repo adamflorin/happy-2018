@@ -102,11 +102,6 @@ class World {
 
     const yPlanePosition = this._screenToYPlane(screenX, screenY)
 
-    if (yPlanePosition.y > 0.0) {
-      messages.tappedHigh()
-    } else {
-      messages.tappedLow()
-    }
     messages.tapped()
 
     physics.blow(yPlanePosition)

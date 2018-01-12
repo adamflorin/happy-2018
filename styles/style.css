@@ -64,7 +64,7 @@ a#play-sound {
 }
   #messages > div.on {
     transition: opacity 150ms;
-    transition-delay: 350ms;
+    transition-delay: 250ms; /* match transitionDelay in Messages.js */
     opacity: 1.0;
   }
   #messages > div#loading {

@@ -2,7 +2,8 @@ import StartAudioContext from 'startaudiocontext'
 import audio from './Audio'
 
 const defaultFontSize = 144
-const greetingDuration = 5000
+const transitionDelay = 250 // match `#messages > div.on` in style.css
+const timeScale = 1.2
 
 class Narrative {
   constructor() {
@@ -37,79 +38,45 @@ class Narrative {
 
   greet() {
     this._displayMessage('greeting')
-    setTimeout(() => this.promptTap(), greetingDuration)
-  }
-
-  promptTap() {
-    this._stepTo('tap-high')
+    this._delayStepTo('pre-prompt', 5000)
+      .then(() => this._delayStepTo('prompt-i-1', 1000))
   }
 
   tapped() {
-    if (this._currentStepId === 'tap-far-side') {
-      this._stepTo('tap-far-side-1')
-    } else if (this._currentStepId === 'tap-far-side-1') {
-      this._stepTo('tap-far-side-2')
-    } else if (this._currentStepId === 'tap-far-side-2') {
-      this._stepTo('tap-far-side-3')
-    } else if (this._currentStepId === 'tap-far-side-3') {
-      this._stepTo('tap-far-side-4')
-    } else if (this._currentStepId === 'tap-far-side-4') {
-      this._stepTo('tap-far-side-5')
-      setTimeout(() => {
-        this._stepTo('look-at-em')
-        setTimeout(() => {
-          this.wrapUp()
-        }, 3000)
-      }, 500)
+    if (this._currentStepId === 'prompt-i-1') {
+      this._stepTo('prompt-i-1-response')
+      this._delayStepTo('prompt-i-2', 1000)
+    } else if (this._currentStepId === 'prompt-i-2') {
+      this._stepTo('prompt-i-3')
+    } else if (this._currentStepId === 'prompt-i-3') {
+      this._stepTo('prompt-i-3-response')
+      this.explain()
+    } else if (this._currentStepId === 'prompt-ii') {
+      this._stepTo('prompt-ii-1')
+    } else if (this._currentStepId === 'prompt-ii-1') {
+      this._stepTo('prompt-ii-2')
+    } else if (this._currentStepId === 'prompt-ii-2') {
+      this._stepTo('prompt-ii-3')
+    } else if (this._currentStepId === 'prompt-ii-3') {
+      this._stepTo('prompt-ii-4')
+    } else if (this._currentStepId === 'prompt-ii-4') {
+      this._stepTo('prompt-ii-5')
+      this._delayStepTo('review-1', 500)
+        .then(() => this._delayStepTo('review-2', 2000))
+        .then(() => this._delayStepTo('review-3', 1000))
+        .then(() => this._delayStepTo('review-4', 1000))
+        .then(() => this._delayStepTo('greeting', 500))
     }
   }
 
-  tappedLow() {
-    if (['tap-high', 'tap-high-again', 'tap-high-again-2'].includes(this._currentStepId)) {
-      this._stepTo('higher')
-    } else if (['tap-low', 'lower'].includes(this._currentStepId)) {
-      this._stepTo('tap-low-again')
-    } else if (this._currentStepId === 'tap-low-again') {
-      this._stepTo('tap-low-again-2')
-    } else if (this._currentStepId === 'tap-low-again-2') {
-      this._stepTo('tap-high')
-    }
-  }
-
-  tappedHigh() {
-    if (['tap-low', 'tap-low-again', 'tap-low-again-2'].includes(this._currentStepId)) {
-      this._stepTo('lower')
-    } else if (['tap-high', 'higher'].includes(this._currentStepId)) {
-      this._stepTo('tap-high-again')
-    } else if (this._currentStepId === 'tap-high-again') {
-      this._stepTo('tap-high-again-2')
-      setTimeout(() => {
-        this.explainRhythms()
-      }, 1000)
-    }
-  }
-
-  explainRhythms() {
-    this._stepTo('rhythms')
-    setTimeout(() => {
-      this._stepTo('ok')
-      setTimeout(() => {
-        this._stepTo('tap-far-side')
-      }, 1000)
-    }, 2000)
-  }
-
-  wrapUp() {
-    this._stepTo('thats-it')
-    setTimeout(() => {
-      this._stepTo('have-fun')
-      setTimeout(() => {
-        this._stepTo('oh')
-        setTimeout(() => {
-          this._stepTo('greeting')
-        }, 1000)
-      }, 1000)
-    }, 2000)
+  explain() {
+    this._delayStepTo('explanation-0', 2000)
+      .then(() => this._delayStepTo('explanation-1', 2000))
+      .then(() => this._delayStepTo('explanation-2', 2000))
+      .then(() => this._delayStepTo('explanation-3', 2000))
+      .then(() => this._delayStepTo('explanation-4', 2000))
+      .then(() => this._delayStepTo('pre-prompt-ii', 2000))
+      .then(() => this._delayStepTo('prompt-ii', 500))
   }
 
   _stepTo(id) {
@@ -122,13 +89,15 @@ class Narrative {
     this._getMessageEl(id).className = 'on'
   }
 
-  _startAudioContext() {
-    const unmuteEl = document.querySelector('a#play-sound')
-    unmuteEl.classList.add('on')
-    this._hideMessages()
-    StartAudioContext(audio.getContext(), unmuteEl, () => {
-      this.greet()
-      unmuteEl.remove()
+  _delayStepTo(messageId, duration) {
+    return new Promise((resolve, reject) => {
+      setTimeout(
+        () => {
+          this._stepTo(messageId)
+          resolve()
+        },
+        duration * timeScale + transitionDelay
+      )
     })
   }
 
@@ -138,6 +107,16 @@ class Narrative {
 
   _getMessageEl(id) {
     return document.querySelector(`#messages #${id}`)
+  }
+
+  _startAudioContext() {
+    const unmuteEl = document.querySelector('a#play-sound')
+    unmuteEl.classList.add('on')
+    this._hideMessages()
+    StartAudioContext(audio.getContext(), unmuteEl, () => {
+      this.greet()
+      unmuteEl.remove()
+    })
   }
 }
 
