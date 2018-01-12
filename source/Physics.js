@@ -34,8 +34,8 @@ class Physics {
   step(time, devMode) {
     const intensity = this._calculateIntensity(time)
     const params = {
-      windForceDecay: devMode ? settings.windForceDecay : lerp(0.96, 0.72, intensity),
-      maxDistance: devMode ? settings.maxDistance : lerp(1.5, 0.06, intensity)
+      windForceDecay: devMode ? settings.windForceDecay : lerp(0.96, 0.72, Math.pow(intensity, 8.0)),
+      maxDistance: devMode ? settings.maxDistance : lerp(1.5, 0.06, Math.pow(intensity, 2.0))
     }
 
     this._objects.forEach((object, objectIndex) => {
@@ -172,10 +172,9 @@ class Physics {
   }
 
   _calculateIntensity(time) {
-    let intensity = Math.abs(
+    return Math.abs(
       ((((time / settings.rotationPeriod) + 0.25) % 1.0) * 2.0) - 1.0
     )
-    return Math.pow(intensity, 8.0)
   }
 }
 
