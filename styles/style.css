@@ -29,17 +29,21 @@ a {
 a#play-sound {
   display: block;
   position: fixed;
-  top: 0;
+  top: 50%;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: url('../images/mute-icon.svg');
+  /* background: url('../images/mute-icon.svg');
   background-size: 50%;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; */
+  transform: translateY(-50%);
+  text-align: center;
+  line-height: 1em;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-size: 900%;
+  color: white;
   z-index: 2;
   opacity: 0.0;
-  text-indent: -9999px;
 }
   a#play-sound.on {
     transition: opacity 250ms;

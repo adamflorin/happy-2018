@@ -30,6 +30,7 @@ class Narrative {
       }
       messageEl.style.fontSize = `${fontSize}px`
     })
+    document.getElementById('play-sound').style.fontSize = `${fontSize}px`
   }
 
   begin() {
@@ -73,7 +74,7 @@ class Narrative {
       .then(() => this._delayStepTo('explanation-1', 3000))
       .then(() => this._delayStepTo('explanation-2', 3000))
       .then(() => this._delayStepTo('pre-prompt-ii', 3000))
-      .then(() => this._delayStepTo('prompt-ii', 500))
+      .then(() => this._delayStepTo('prompt-ii', 1000))
   }
 
   explainStorm() {
