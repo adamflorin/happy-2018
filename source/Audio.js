@@ -47,13 +47,15 @@ class Audio {
   }
 
   _initMixer(lofi) {
+    lofi = true
+
     let reverbMix
     let reverb
 
     this.output = new Tone.Volume(-96.0).toMaster()
 
     const limiter = new Tone.Limiter({
-      threshold: -0.3
+      threshold: -0.6
     }).connect(this.output)
 
     if (!lofi) {
@@ -64,10 +66,10 @@ class Audio {
       }).connect(reverbMix)
     }
 
-    const dryMix = new Tone.Gain(0.4).connect(limiter)
+    const dryMix = new Tone.Gain(0.6).connect(limiter)
     this.master = new Tone.Compressor({
       ratio: 8.0,
-      threshold: -12.0,
+      threshold: -24.0,
       release: 0.5,
       attack: 0.003,
       knee: 30
