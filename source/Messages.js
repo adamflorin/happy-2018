@@ -23,7 +23,7 @@ class Narrative {
 
     this._messageEls = document.querySelectorAll('#messages div')
 
-    const fontSize = Math.min(window.innerWidth / 4.0, defaultFontSize)
+    const fontSize = Math.min(window.innerWidth / 5.0, defaultFontSize)
     this._messageEls.forEach(messageEl => {
       if (messageEl.id === 'loading') {
         return
@@ -63,9 +63,9 @@ class Narrative {
       this._stepTo('prompt-ii-5')
       this._delayStepTo('review-1', 500)
         .then(() => this._delayStepTo('review-2', 2000))
-        .then(() => this._delayStepTo('review-3', 1000))
-        .then(() => this._delayStepTo('review-4', 1000))
-        .then(() => this._delayStepTo('greeting', 500))
+        .then(() => this._delayStepTo('review-3', 2000))
+        .then(() => this._delayStepTo('review-4', 2000))
+        .then(() => this._delayStepTo('greeting', 1000))
     }
   }
 
