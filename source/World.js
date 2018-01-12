@@ -11,7 +11,7 @@ import {settings, displayControls} from './settings'
 
 const devMode = false
 let lofi = false
-let numObjects = 4
+let numObjects = 5
 const waitBeforeBeginDuration = 100
 const rotationPeriod = 10.0
 

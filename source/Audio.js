@@ -47,8 +47,6 @@ class Audio {
   }
 
   _initMixer(lofi) {
-    lofi = true
-
     let reverbMix
     let reverb
 
@@ -66,7 +64,7 @@ class Audio {
       }).connect(reverbMix)
     }
 
-    const dryMix = new Tone.Gain(0.6).connect(limiter)
+    const dryMix = new Tone.Gain(0.2).connect(limiter)
     this.master = new Tone.Compressor({
       ratio: 8.0,
       threshold: -24.0,
