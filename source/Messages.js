@@ -109,19 +109,22 @@ class Narrative {
   }
 
   _displayMessage(id) {
-    this._messageEls.forEach(el => el.className = '')
+    this._hideMessages()
     this._getMessageEl(id).className = 'on'
   }
 
   _startAudioContext() {
-    const unmuteEl = this._getMessageEl('play-sound')
-    const greetingEl = this._getMessageEl('greeting')
-
+    const unmuteEl = document.querySelector('a#play-sound')
     unmuteEl.classList.add('on')
+    this._hideMessages()
     StartAudioContext(audio.getContext(), unmuteEl, () => {
       this.greet()
       unmuteEl.remove()
     })
+  }
+
+  _hideMessages() {
+    this._messageEls.forEach(el => el.className = '')
   }
 
   _getMessageEl(id) {

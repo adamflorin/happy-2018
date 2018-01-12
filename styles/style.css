@@ -26,7 +26,7 @@ a {
   text-decoration: none;
 }
 
-#messages > a#play-sound {
+a#play-sound {
   display: block;
   position: fixed;
   top: 0;
@@ -41,7 +41,7 @@ a {
   opacity: 0.0;
   text-indent: -9999px;
 }
-  #messages > a#play-sound.on {
+  a#play-sound.on {
     transition: opacity 250ms;
     opacity: 0.6;
   }
@@ -85,4 +85,5 @@ a {
   right: 1em;
   font-size: 100%;
   z-index: 1;
+  opacity: 0.2;
 }
