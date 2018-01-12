@@ -3,7 +3,7 @@ import audio from './Audio'
 
 const defaultFontSize = 144
 const transitionDelay = 250 // match `#messages > div.on` in style.css
-const timeScale = 1.2
+const timeScale = 0.6
 
 class Narrative {
   constructor() {
@@ -38,8 +38,7 @@ class Narrative {
 
   greet() {
     this._displayMessage('greeting')
-    this._delayStepTo('pre-prompt', 5000)
-      .then(() => this._delayStepTo('prompt-i-1', 1000))
+    this._delayStepTo('prompt-i-1', 2000)
   }
 
   tapped() {
@@ -62,19 +61,17 @@ class Narrative {
     } else if (this._currentStepId === 'prompt-ii-4') {
       this._stepTo('prompt-ii-5')
       this._delayStepTo('review-1', 500)
-        .then(() => this._delayStepTo('review-2', 4000))
-        .then(() => this._delayStepTo('review-3', 2000))
+        .then(() => this._delayStepTo('review-2', 3000))
+        .then(() => this._delayStepTo('review-3', 1000))
         .then(() => this._delayStepTo('review-4', 2000))
         .then(() => this._delayStepTo('greeting', 1000))
     }
   }
 
   explain() {
-    this._delayStepTo('explanation-0', 2000)
+    this._delayStepTo('explanation-0', 1000)
       .then(() => this._delayStepTo('explanation-1', 2000))
       .then(() => this._delayStepTo('explanation-2', 2000))
-      .then(() => this._delayStepTo('explanation-3', 2000))
-      .then(() => this._delayStepTo('explanation-4', 2000))
       .then(() => this._delayStepTo('pre-prompt-ii', 2000))
       .then(() => this._delayStepTo('prompt-ii', 500))
   }
