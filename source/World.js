@@ -26,11 +26,11 @@ class World {
     audio.createSounds(numObjects)
     audio.init()
 
+    graphics.beforeFrame(time => this._onFrame(time))
     physics.onObjectStrike(objectIndex => {
       audio.triggerStrike(objectIndex)
       graphics.trigger(objectIndex)
     })
-
     this._bindEvents()
 
     setTimeout(() => this.begin(), waitBeforeBeginDuration)
@@ -42,8 +42,6 @@ class World {
     audio.begin()
 
     setTimeout(() => messages.begin(), 500)
-
-    graphics.beforeFrame(time => this._onFrame(time))
   }
 
   _onFrame(time) {
