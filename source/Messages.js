@@ -1,6 +1,7 @@
 import StartAudioContext from 'startaudiocontext'
 import audio from './Audio'
 
+const defaultFontSize = 144
 const greetingDuration = 5000
 
 class Narrative {
@@ -20,6 +21,14 @@ class Narrative {
     this._currentStepId = 'greeting'
 
     this._messageEls = document.querySelectorAll('#messages div')
+
+    const fontSize = Math.min(window.innerWidth / 4.0, defaultFontSize)
+    this._messageEls.forEach(messageEl => {
+      if (messageEl.id === 'loading') {
+        return
+      }
+      messageEl.style.fontSize = `${fontSize}px`
+    })
   }
 
   begin() {
