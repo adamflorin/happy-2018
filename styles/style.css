@@ -70,11 +70,11 @@ a#play-sound {
   #messages > div#loading {
     color: inherit;
   }
-  #messages > div#tap-far-side-1,
-  #messages > div#tap-far-side-2,
-  #messages > div#tap-far-side-3,
-  #messages > div#tap-far-side-4,
-  #messages > div#tap-far-side-5 {
+  #messages > div#prompt-ii-1,
+  #messages > div#prompt-ii-2,
+  #messages > div#prompt-ii-3,
+  #messages > div#prompt-ii-4,
+  #messages > div#prompt-ii-5 {
     transition: opacity 0ms;
     transition-delay: 0ms;
   }
