@@ -51,7 +51,7 @@ class World {
       this._stats.begin()
     }
 
-    physics.step()
+    physics.step(time, devMode)
     audio.modulateModion()
 
     if (devMode) {

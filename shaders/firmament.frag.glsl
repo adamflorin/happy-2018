@@ -22,7 +22,7 @@ void main() {
 
   // darken one side of sphere
   float unitAngle = abs(atan(vPosition.z, vPosition.x) / M_PI);
-  shade *= mix(1.0, 0.1, pow(unitAngle, 4.0));
+  shade *= mix(1.0, 0.3, smoothstep(0.0, 1.0, pow(unitAngle, 2.0)));
 
   gl_FragColor = vec4(vec3(shade), 1.0);
 }

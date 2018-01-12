@@ -1,5 +1,5 @@
 import {settings} from './settings'
-import {mix, wrapRadians, computeDelta, magnitude, angle} from './utils'
+import {lerp, mix, wrapRadians, computeDelta, magnitude, angle} from './utils'
 
 const objectGravityDistanceThreshold = 0.01
 
@@ -31,9 +31,15 @@ class Physics {
     return Math.sqrt(x * x + y * y)
   }
 
-  step() {
+  step(time, devMode) {
+    const intensity = this._calculateIntensity(time)
+    const params = {
+      windForceDecay: devMode ? settings.windForceDecay : lerp(0.96, 0.72, intensity),
+      maxDistance: devMode ? settings.maxDistance : lerp(1.5, 0.06, intensity)
+    }
+
     this._objects.forEach((object, objectIndex) => {
-      this._stepObject(object, objectIndex)
+      this._stepObject(object, objectIndex, params)
 
       let objectWasStable = object.stable
       let objectGravityDistance = this.getObjectGravityDistance(objectIndex)
@@ -101,12 +107,12 @@ class Physics {
     }
   }
 
-  _stepObject(object, objectIndex) {
+  _stepObject(object, objectIndex, {windForceDecay, maxDistance}) {
     let x = object.position.x
     let y = object.position.y
 
     // compute wind force
-    object.forces.wind.magnitude *= settings.windForceDecay
+    object.forces.wind.magnitude *= windForceDecay
     if (object.forces.wind.magnitude < 0.001) {
       object.forces.wind.magnitude = 0.0
     }
@@ -141,7 +147,7 @@ class Physics {
 
     // limit position
     const newDistance = magnitude(object.position)
-    const scalePosition = newDistance / settings.maxDistance
+    const scalePosition = newDistance / maxDistance
     if (scalePosition >= 1.0) {
       object.position.x /= scalePosition
       object.position.y /= scalePosition
@@ -163,6 +169,13 @@ class Physics {
       }
     })
     return this._objects[nearestIndex]
+  }
+
+  _calculateIntensity(time) {
+    let intensity = Math.abs(
+      ((((time / settings.rotationPeriod) + 0.25) % 1.0) * 2.0) - 1.0
+    )
+    return Math.pow(intensity, 8.0)
   }
 }
 

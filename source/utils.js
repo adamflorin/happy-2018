@@ -6,8 +6,12 @@ function floatColor(intColor) {
   return intColor.map(value => value / 255.0)
 }
 
+function lerp(from, to, alpha) {
+  return from + (to - from) * alpha
+}
+
 function mix(from, to, mix) {
-  return (from * mix) + (1.0 - mix) * to
+  return (mix * from) + ((1.0 - mix) * to)
 }
 
 function wrapRadians(radians) {
@@ -50,6 +54,7 @@ function dot(vectorA, vectorB) {
 
 module.exports = {
   floatColor,
+  lerp,
   mix,
   wrapRadians,
   computeDelta,
