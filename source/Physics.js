@@ -37,6 +37,8 @@ class Physics {
       windForceDecay: devMode ? settings.windForceDecay : lerp(0.96, 0.76, Math.pow(intensity, 8.0)),
       maxDistance: devMode ? settings.maxDistance : lerp(1.5, 0.04, Math.pow(intensity, 6.0))
     }
+    settings.windForceDecay = params.windForceDecay
+    settings.maxDistance = params.maxDistance
 
     this._objects.forEach((object, objectIndex) => {
       this._stepObject(object, objectIndex, params)
