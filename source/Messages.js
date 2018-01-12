@@ -1,9 +1,19 @@
 import StartAudioContext from 'startaudiocontext'
+import WebFont from 'webfontloader'
 import audio from './Audio'
 
 const defaultFontSize = 144
 const transitionDelay = 250 // match `#messages > div.on` in style.css
 const timeScale = 0.6
+
+WebFont.load({
+  google: {
+    families: [
+      'Open Sans',
+      'Open Sans Condensed:300'
+    ]
+  }
+})
 
 class Narrative {
   constructor() {

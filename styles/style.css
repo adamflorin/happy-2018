@@ -65,6 +65,7 @@ a#play-sound {
   transition: opacity 150ms;
   pointer-events: none;
   z-index: 2;
+  display: none;
 }
   #messages > div.on {
     transition: opacity 150ms;
@@ -82,6 +83,10 @@ a#play-sound {
     transition: opacity 0ms;
     transition-delay: 0ms;
   }
+
+.wf-active #messages > div {
+  display: block;
+}
 
 #attribution {
   position: fixed;
