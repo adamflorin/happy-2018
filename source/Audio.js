@@ -2,6 +2,8 @@ import Tone from 'tone'
 import physics from './Physics'
 import Splash from './sounds/Splash'
 
+const fadeInDuration = 1.0 // s
+
 class Audio {
   constructor() {
     this._splashes = []
@@ -20,6 +22,10 @@ class Audio {
   init() {
     this._initMixer()
     this._splashes.forEach(splash => splash.connect(this.master))
+  }
+
+  begin() {
+    this.output.volume.exponentialRampTo(0.0, fadeInDuration)
   }
 
   toggleMute() {
@@ -41,7 +47,7 @@ class Audio {
   }
 
   _initMixer() {
-    this.output = new Tone.Volume(0.0).toMaster()
+    this.output = new Tone.Volume(-96.0).toMaster()
 
     const limiter = new Tone.Limiter({
       threshold: -0.3

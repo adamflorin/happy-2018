@@ -13,14 +13,20 @@ body {
 
 canvas {
   position: fixed !important;
+  opacity: 0.0;
 }
+  canvas.on {
+    opacity: 1.0;
+    transition: opacity 500ms ease-in;
+    transition-delay: 500ms;
+  }
 
 a {
   color: inherit;
   text-decoration: none;
 }
 
-a#play-sound {
+#messages > a#play-sound {
   display: block;
   position: fixed;
   top: 0;
@@ -32,11 +38,15 @@ a#play-sound {
   background-repeat: no-repeat;
   background-position: center;
   z-index: 2;
-  opacity: 0.6;
+  opacity: 0.0;
   text-indent: -9999px;
 }
+  #messages > a#play-sound.on {
+    transition: opacity 250ms;
+    opacity: 0.6;
+  }
 
-#greeting {
+#messages > div {
   position: fixed;
   top: 50%;
   left: 0;
@@ -47,13 +57,26 @@ a#play-sound {
   font-family: 'Open Sans Condensed', sans-serif;
   font-size: 900%;
   color: white;
-  z-index: 1;
   opacity: 0.0;
+  transition: opacity 150ms;
   pointer-events: none;
+  z-index: 2;
 }
-  #greeting.on {
+  #messages > div.on {
+    transition: opacity 150ms;
+    transition-delay: 350ms;
     opacity: 1.0;
-    transition: opacity 250ms;
+  }
+  #messages > div#loading {
+    color: inherit;
+  }
+  #messages > div#tap-far-side-1,
+  #messages > div#tap-far-side-2,
+  #messages > div#tap-far-side-3,
+  #messages > div#tap-far-side-4,
+  #messages > div#tap-far-side-5 {
+    transition: opacity 0ms;
+    transition-delay: 0ms;
   }
 
 #attribution {

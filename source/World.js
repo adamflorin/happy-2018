@@ -1,4 +1,3 @@
-import StartAudioContext from 'startaudiocontext'
 import Stats from 'stats-js'
 import multiply from 'gl-mat4/multiply'
 import invert from 'gl-mat4/invert'
@@ -7,12 +6,13 @@ import {viewMatrix, projectionMatrix, eye} from './graphics/Camera'
 import Graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
-import narrative from './Narrative'
+import messages from './Messages'
 import {displayControls} from './settings'
 
 const devMode = false
 const renderGraphics = true
 const numObjects = 5
+const waitBeforeBeginDuration = 100
 
 let graphics
 
@@ -34,12 +34,6 @@ class World {
     audio.createSounds(numObjects)
     audio.init()
 
-    if (renderGraphics) {
-      graphics.beforeFrame(() => this._onFrame())
-    } else {
-      requestAnimationFrame(() => this._onFrame())
-    }
-
     physics.onObjectStrike(objectIndex => {
       audio.triggerStrike(objectIndex)
       if (renderGraphics) {
@@ -48,7 +42,22 @@ class World {
     })
 
     this._bindEvents()
-    this._startAudioContext()
+
+    setTimeout(() => this.begin(), waitBeforeBeginDuration)
+  }
+
+  begin() {
+    this._getCanvas().classList.add('on')
+
+    audio.begin()
+
+    setTimeout(() => messages.begin(), 500)
+
+    if (renderGraphics) {
+      graphics.beforeFrame(() => this._onFrame())
+    } else {
+      requestAnimationFrame(() => this._onFrame())
+    }
   }
 
   _onFrame() {
@@ -71,11 +80,9 @@ class World {
   _bindEvents() {
     // wind
     if (renderGraphics) {
-      const canvas = document.getElementsByTagName('canvas')[0]
-
       if ('ontouchstart' in document.documentElement) {
         // mobile
-        canvas.addEventListener('touchstart', event => {
+        this._getCanvas().addEventListener('touchstart', event => {
           event.preventDefault()
           const touchIndex = event.touches.length - 1
           this._handleTap({
@@ -85,7 +92,7 @@ class World {
         })
       } else {
         // desktop
-        canvas.addEventListener('mousedown', event => {
+        this._getCanvas().addEventListener('mousedown', event => {
           event.preventDefault()
           this._handleTap({x: event.x, y: event.y})
         }
@@ -102,15 +109,6 @@ class World {
     }
   }
 
-  _startAudioContext() {
-    const unmuteEl = document.getElementById('play-sound')
-    const greetingEl = document.getElementById('greeting')
-    StartAudioContext(audio.getContext(), unmuteEl, () => {
-      greetingEl.className = 'on'
-      unmuteEl.remove()
-    })
-  }
-
   _handleTap(point) {
     const windowWidth = window.innerWidth * window.devicePixelRatio
     const windowHeight = window.innerHeight * window.devicePixelRatio
@@ -119,6 +117,14 @@ class World {
     const screenY = -2.0 * (point.y / window.innerHeight - 0.5)
 
     const yPlanePosition = this._screenToYPlane(screenX, screenY)
+
+    if (yPlanePosition.y > 0.0) {
+      messages.tappedHigh()
+    } else {
+      messages.tappedLow()
+    }
+    messages.tapped()
+
     physics.blow(yPlanePosition)
   }
 
@@ -150,6 +156,10 @@ class World {
     this._stats.domElement.style.right = '275px'
     this._stats.domElement.style.top = 0
     document.body.appendChild(this._stats.domElement)
+  }
+
+  _getCanvas() {
+    return document.querySelector('canvas')
   }
 }
 
