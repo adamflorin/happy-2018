@@ -62,7 +62,7 @@ class Narrative {
     } else if (this._currentStepId === 'prompt-ii-4') {
       this._stepTo('prompt-ii-5')
       this._delayStepTo('review-1', 500)
-        .then(() => this._delayStepTo('review-2', 2000))
+        .then(() => this._delayStepTo('review-2', 4000))
         .then(() => this._delayStepTo('review-3', 2000))
         .then(() => this._delayStepTo('review-4', 2000))
         .then(() => this._delayStepTo('greeting', 1000))
@@ -77,6 +77,15 @@ class Narrative {
       .then(() => this._delayStepTo('explanation-4', 2000))
       .then(() => this._delayStepTo('pre-prompt-ii', 2000))
       .then(() => this._delayStepTo('prompt-ii', 500))
+  }
+
+  explainStorm() {
+    this._delayStepTo('storm-1', 0)
+      .then(() => this._delayStepTo('storm-2', 2000))
+      .then(() => this._delayStepTo('storm-3', 2000))
+      .then(() => this._delayStepTo('storm-4', 2000))
+      .then(() => this._delayStepTo('post-storm', 2000))
+      .then(() => this._delayStepTo('greeting', 500))
   }
 
   _stepTo(id) {

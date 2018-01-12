@@ -7,12 +7,12 @@ import graphics from './Graphics'
 import audio from './Audio'
 import physics from './Physics'
 import messages from './Messages'
-import {displayControls} from './settings'
+import {settings, displayControls} from './settings'
 
 const devMode = false
 let lofi = false
 let numObjects = 5
-const waitBeforeBeginDuration = 100
+const waitBeforeBeginDuration = 350
 const rotationPeriod = 10.0
 
 class World {
@@ -26,6 +26,8 @@ class World {
       lofi = true
       numObjects = 3
     }
+
+    this._messagedStorm = false
 
     physics.createObjects(numObjects)
     graphics.createObjects(numObjects)
@@ -57,6 +59,10 @@ class World {
 
     physics.step(time, devMode)
     audio.modulateModion()
+    if (!this._messagedStorm && (time / settings.rotationPeriod > 0.6)) {
+      messages.explainStorm()
+      this._messagedStorm = true
+    }
 
     if (devMode) {
       this._stats.end()
