@@ -13,7 +13,6 @@ const devMode = false
 let lofi = false
 let numObjects = 5
 const waitBeforeBeginDuration = 100
-const rotationPeriod = 10.0
 
 class World {
   constructor() {
