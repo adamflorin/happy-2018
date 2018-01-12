@@ -121,32 +121,11 @@ export default class Splash {
       }
     )
 
-    const lfoGain = new Tone.Gain(1.0).connect(flutterVolume)
-
-    const flutterLFO = new Tone.LFO({
-      frequency: 5.0,
-      type: 'sawtooth',
-      min: 0.9,
-      max: 0.3
-    }).start()
-    this._addMotionModulation(
-      ({velocity}) => {
-        let lfoFrequency = 2.5 + (velocity * 15.0)
-        flutterLFO.frequency.value = lfoFrequency
-      }
-    )
-    const lfoFilter = new Tone.Filter({
-      type: 'lowpass',
-      frequency: 1000,
-      Q: 1.0
-    })
-    const lfoPow = new Tone.Pow(1.0)
-
     const flutterFilter = new Tone.Filter({
       frequency: this.frequency * 4.0,
       type: 'highpass',
       Q: 50.0
-    }).connect(lfoGain)
+    }).connect(flutterVolume)
 
     this._addMotionModulation(
       ({distance}) => {
@@ -166,8 +145,6 @@ export default class Splash {
         noise.volume.value = noiseVolume
       }
     )
-
-    flutterLFO.chain(lfoFilter, lfoPow, lfoGain.gain)
 
     return flutterFilter
   }
