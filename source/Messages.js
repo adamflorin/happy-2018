@@ -39,7 +39,7 @@ class Narrative {
 
   greet() {
     this._displayMessage('greeting')
-    this._delayStepTo('prompt-i-1', 2000)
+    // this._delayStepTo('prompt-i-1', 2000)
   }
 
   tapped() {

@@ -84,6 +84,7 @@ a#play-sound {
   }
 
 #attribution {
+  display: none;
   position: fixed;
   bottom: 0.5em;
   right: 1em;
