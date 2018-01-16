@@ -1,13 +1,13 @@
 {
-  "name": "vys-ex",
-  "version": "0.0.1",
-  "description": "visual expression of form",
+  "name": "happy-2018",
+  "version": "1.0.0",
+  "description": "Tap into the New Year with homemade physics, graphics, and synthesis 🖤✨",
   "main": "index.js",
   "author": "Adam Florin",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adamflorin/vys-ex"
+    "url": "https://github.com/adamflorin/happy-2018"
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0",

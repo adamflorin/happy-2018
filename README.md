@@ -1,9 +1,18 @@
-# 2018
+# Happy 2018
 
-Simple graphics & audio synthesis greeting card built with
-[regl](http://regl.party/) and [Tone.js](https://tonejs.github.io/).
+![Happy New Year](images/og.jpg)
 
-## Scripts
+A weird-physics rhythm machine implemented as a web app using `npm`, [regl](http://regl.party/) / [glslify](https://github.com/glslify/glslify) for graphics and [Tone.js](https://tonejs.github.io/) for audio.
+
+## Development
+
+Everything is bootstrapped in `World`. From there, see `Physics`, `Graphics` (plus specific `regl` methods in `graphics/`), and `Audio` (plus specific sound generators in `audio/`).
+
+`regl` provides the `requestAnimationFrame` hook, which then steps the animation in `Physics`, draws in `Graphics`, and modulates audio parameters in `Audio`.
+
+Messages are specified in `index.html` and triggered by `Messages`.
+
+That's about it. Keep on tappin'!
 
 ### Installation
 
@@ -14,6 +23,10 @@ Simple graphics & audio synthesis greeting card built with
 
     npm start
 
+Then point your browser to `http://localhost:8080/`.
+
 ### Building (production)
 
     npm run-script build
+
+App will be built to `build/`. (Currently deployed via [Netlify](https://www.netlify.com/).)
