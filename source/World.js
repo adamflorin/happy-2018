@@ -58,7 +58,7 @@ class World {
     }
 
     physics.step(time, devMode)
-    audio.modulateModion()
+    audio.modulateMotion()
     if (!this._messagedStorm && (time / settings.rotationPeriod > 0.6)) {
       messages.explainStorm()
       this._messagedStorm = true

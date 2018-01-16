@@ -1,6 +1,6 @@
 import Tone from 'tone'
 import physics from './Physics'
-import Splash from './sounds/Splash'
+import Splash from './audio/Splash'
 
 const fadeInDuration = 1.0 // s
 
@@ -36,7 +36,7 @@ class Audio {
     this._splashes[objectIndex].trigger()
   }
 
-  modulateModion() {
+  modulateMotion() {
     this._splashes.forEach((splash, index) => {
       splash.modulateMotion(physics.getObject(index))
     })
